@@ -18,11 +18,11 @@ const App: React.FC = () =>  {
   };
 
   return (
-    <div className="App">
-      <span className="heading">To-do-list</span>
-      <InputField todo={todo} setTodo={setTodo} handleAdd = {handleAdd}></InputField>
-      <TodoList todos={todos} setTodos={setTodos}></TodoList>
-    </div>
+      <div className="App">
+        <span className="heading">To-do-list</span>
+        <InputField todo={todo} setTodo={setTodo} handleAdd = {handleAdd}></InputField>
+        <TodoList todos={todos} setTodos={setTodos}></TodoList>
+      </div>
   );
 }
 

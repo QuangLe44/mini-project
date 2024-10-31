@@ -11,12 +11,9 @@
     padding: 20px 30px;
     font-size: 25px;
     border: none;
-    transition: 0.2s;
-    box-shadow: inset 0 0 5px black;
   }
   
   .input_box:focus {
-    box-shadow: 0 0 10px 1000px rgba(0, 0, 0, 0.5);
     outline: none;
   }
   
@@ -37,6 +34,7 @@
   
   .input_submit:hover {
     background-color: limegreen;
+    cursor: pointer;
   }
   
   .input_submit:active {
@@ -49,6 +47,7 @@
     justify-content: center;
     width: 50%;
     flex-wrap: wrap;
+    padding-bottom: 40px;
   }
   
   .todos_single {
@@ -75,22 +74,4 @@
     font-size: 25px;
     color: green;
     cursor: pointer;
-  }
-  
-  @media (max-width: 1200px) {
-    .todos_single {
-      width: 40%;
-    }
-  }
-  
-  @media (max-width: 700px) {
-    .input {
-      width: 95%;
-    }
-    .todos {
-      width: 95%;
-    }
-    .todos_single {
-      width: 100%;
-    }
   }
