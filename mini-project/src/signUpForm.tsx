@@ -96,7 +96,6 @@ const SignupForm: React.FC = () => {
 
   return (
     <>
-      <h1>Subscribe!</h1>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
