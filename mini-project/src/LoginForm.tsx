@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Formik, Form, useField, useFormikContext, FieldAttributes } from "formik";
+import { Formik, Form, useField, FieldAttributes } from "formik";
+import { Typography, Button, TextField } from "@mui/material";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import "./signInStyle.css";
@@ -18,7 +19,17 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
     return (
       <>
         <label htmlFor={props.id || props.name}>{label}</label>
-        <input className="text-input" {...field} {...props} />
+        <TextField variant="filled" className="text-input" {...field} {...props} sx={{
+                '& .MuiFilledInput-underline:before': {
+                    borderBottom: 'none',
+                },
+                '& .MuiFilledInput-underline:after': {
+                  borderBottom: 'none',
+                },
+                '& .MuiFilledInput-input': {
+                  paddingTop: '12px',
+                },
+            }}/>
         {meta.touched && meta.error ? (
           <div className="error">{meta.error}</div>
         ) : null}
@@ -31,20 +42,23 @@ const LoginForm: React.FC = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const handleLogin = async () => {
+  const handleLogin = async (values: {email: string, password: string }, { resetForm }: any) => {
     try {
-      console.log(email,password);
-      setEmail("");
-      setPassword("");
-      // await login(email, password);
+        console.log(email,password);
+        // await login(email, password);      
+        resetForm();
     } catch (error) {
       console.error('Login failed:', error);
     }
   };
   return (
     <>
-      <h1>Login</h1>
-      <h6>Not a user yet? <Link to="/register">Sign up here</Link></h6>
+      <Typography variant="h2" sx={{
+                marginTop: '30px'
+            }}>Login</Typography>
+      <Typography variant="h6"  sx={{
+                margin: '20px'
+            }}>Not a user yet? <Link to="/register">Sign up here</Link></Typography>
       <Formik
         initialValues={{
           email: "",
@@ -64,10 +78,9 @@ const LoginForm: React.FC = () => {
             label="Email"
             name="email"
             type="email"
-            value={email}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setFieldValue("email", e.target.value)              
               setEmail(e.target.value)
-              setFieldValue("email", e.target.value)
             }}
             placeholder=""
           />
@@ -75,16 +88,17 @@ const LoginForm: React.FC = () => {
             label="Password"
             name="password"
             type="password"
-            value={password}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setFieldValue("password", e.target.value)              
               setPassword(e.target.value)
-              setFieldValue("password", e.target.value)
             }}
             placeholder=""
           />
           <br />
           <br />
-          <button type="submit">Login</button>
+          <Button variant="contained" type="submit" sx={{
+            width: "100%",
+          }}>Login</Button>
         </Form>)}
       </Formik>
     </>

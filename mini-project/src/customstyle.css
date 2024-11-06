@@ -1,6 +1,6 @@
 input[type="password"],
 input[type="text"],
-input[type="number"],
+input[type="email"],
 textarea,
 select {
   width: 400px;
