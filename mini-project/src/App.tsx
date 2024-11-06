@@ -9,7 +9,7 @@ const AppRoutes = () => {
   // Define routes using useRoutes
   const routes = useRoutes([
     { path: '/', element: <LoginForm /> },
-    { path: '/signup', element: <SignupForm /> },
+    { path: '/register', element: <SignupForm /> },
   ]);
 
   return routes;

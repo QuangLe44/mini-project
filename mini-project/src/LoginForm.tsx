@@ -44,7 +44,7 @@ const LoginForm: React.FC = () => {
   return (
     <>
       <h1>Login</h1>
-      <h6>Not a user yet? <Link to="/signup">Sign up here</Link></h6>
+      <h6>Not a user yet? <Link to="/register">Sign up here</Link></h6>
       <Formik
         initialValues={{
           email: "",
