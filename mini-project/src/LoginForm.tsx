@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { Formik, Form, useField, FieldAttributes } from "formik";
-import { Typography, Button, TextField, styled } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Typography, Button, TextField, styled, Link } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useAuth } from "./context/AuthContext";
+import { StyledBody, StyledBox } from "./components/Layout";
 
 const StyledForm = styled(Form)({
   display: "flex",
@@ -45,6 +46,7 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
 
 // And now we can use these
 const LoginForm: React.FC = () => {
+  const navigate = useNavigate();
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,6 +57,7 @@ const LoginForm: React.FC = () => {
         await login(email, password);
         setErrorMessage(null);      
         resetForm();
+        navigate("/about");
     } catch (error) {
       resetForm();
       if (error instanceof Error) {
@@ -67,60 +70,64 @@ const LoginForm: React.FC = () => {
   };
   return (
     <>
-      <Typography variant="h2" sx={{
-                marginTop: "30px"
-            }}>Login</Typography>
-      <Typography variant="h6"  sx={{
-                margin: "20px"
-            }}>Not a user yet? <Link to="/register">Sign up here</Link></Typography>
-      <Formik
-        initialValues={{
-          email: "",
-          password: ""
-        }}
-        validationSchema={Yup.object({
-          email: Yup.string()
-            .email("Invalid email")
-            .required("Required"),
-          password: Yup.string()
-            .required("Required")
-        })}
-        onSubmit={handleLogin}
-      >
-        {({setFieldValue}) => (<StyledForm>
-          <MyTextInput
-            label="Email"
-            name="email"
-            type="email"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue("email", e.target.value)              
-              setEmail(e.target.value)
-            }}
-            placeholder=""
-          />
-          <MyTextInput
-            label="Password"
-            name="password"
-            type="password"
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              setFieldValue("password", e.target.value)              
-              setPassword(e.target.value)
-            }}
-            placeholder=""
-          />
-          {errorMessage && (
-            <Typography color="error" sx={{
-              fontWeight: "bold",
-              fontSize: "1.2rem",
-              marginBottom: "20px",
-              marginTop: "20px",
-            }}>
-              {errorMessage}
-            </Typography>
-          )}
-          <Button variant="contained" type="submit">Login</Button>
-        </StyledForm>)}
-      </Formik>
+    <StyledBody>
+      <StyledBox>
+        <Typography variant="h2" sx={{
+                  marginTop: "30px"
+              }}>Login</Typography>
+        <Typography variant="h6"  sx={{
+                  margin: "20px"
+              }}>Not a user yet? <Link href="/register">Sign up here</Link></Typography>
+        <Formik
+          initialValues={{
+            email: "",
+            password: ""
+          }}
+          validationSchema={Yup.object({
+            email: Yup.string()
+              .email("Invalid email")
+              .required("Required"),
+            password: Yup.string()
+              .required("Required")
+          })}
+          onSubmit={handleLogin}
+        >
+          {({setFieldValue}) => (<StyledForm>
+            <MyTextInput
+              label="Email"
+              name="email"
+              type="email"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue("email", e.target.value)              
+                setEmail(e.target.value)
+              }}
+              placeholder=""
+            />
+            <MyTextInput
+              label="Password"
+              name="password"
+              type="password"
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setFieldValue("password", e.target.value)              
+                setPassword(e.target.value)
+              }}
+              placeholder=""
+            />
+            {errorMessage && (
+              <Typography color="error" sx={{
+                fontWeight: "bold",
+                fontSize: "1.2rem",
+                marginBottom: "20px",
+                marginTop: "20px",
+              }}>
+                {errorMessage}
+              </Typography>
+            )}
+            <Button variant="contained" type="submit">Login</Button>
+          </StyledForm>)}
+        </Formik>
+      </StyledBox>
+    </StyledBody>      
     </>
   );
 };

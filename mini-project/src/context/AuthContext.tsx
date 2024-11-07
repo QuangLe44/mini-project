@@ -4,24 +4,17 @@ import axios from 'axios';
 
 // Define the shape of the AuthContext
 interface AuthContextType {
-  user: User | null;
   access_token: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, passwordConfirm: string) => Promise<void>;
   logout: () => void;
 }
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
-
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // AuthProvider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user_id, setUserID] = useState<string | null>(null);
   const [access_token, setToken] = useState<string | null>(null);
 
   const login = async (email: string, password: string) => {
@@ -36,17 +29,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
 
-      const { access_token } = response.data;
+      const { access_token, user_id } = response.data;
 
       if (!access_token) {
         throw new Error("Invalid credentials");
       }
 
       setToken(access_token);
-      // setUser(newUser);
+      setUserID(user_id);
 
       localStorage.setItem('authToken', access_token);
-      // localStorage.setItem('user', JSON.stringify(newUser.id));
+      localStorage.setItem('userID', user_id);
 
     } catch (error) {
       throw error;
@@ -68,17 +61,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
 
-      const { access_token } = response.data;
+      const { access_token, user_id } = response.data;
 
       if (!access_token) {
         throw new Error("Invalid sign up");
       }
 
       setToken(access_token);
-      // setUser(user);
+      setUserID(user_id);
 
       localStorage.setItem('authToken', access_token);
-      // localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('userID', user_id);
     } catch (error) {
       throw error;
     }
@@ -87,13 +80,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     setToken(null);
-    setUser(null);
+    setUserID(null);
     localStorage.removeItem('authToken');
-    localStorage.removeItem('user');
+    localStorage.removeItem('userID');
   };
 
   const value = {
-    user,
     access_token,
     login,
     register,
