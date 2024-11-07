@@ -1,11 +1,15 @@
 import React, { useState } from "react";
 import { Formik, Form, useField, FieldAttributes } from "formik";
-import { Typography, Button, TextField } from "@mui/material";
+import { Typography, Button, TextField, styled } from "@mui/material";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import "./signInStyle.css";
-import "./customstyle.css";
 import { useAuth } from "./context/AuthContext";
+
+const StyledForm = styled(Form)({
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px",
+});
 
 interface MyTextInputProps extends FieldAttributes<any> {
     label: string;
@@ -18,7 +22,9 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
       <>
-        <label htmlFor={props.id || props.name}>{label}</label>
+        <Typography component="label" htmlFor={props.id || props.name} sx={{
+          fontWeight: 'bold',
+        }}>{label}</Typography>
         <TextField variant="filled" className="text-input" {...field} {...props} sx={{
                 '& .MuiFilledInput-underline:before': {
                     borderBottom: 'none',
@@ -31,7 +37,7 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
                 },
             }}/>
         {meta.touched && meta.error ? (
-          <div className="error">{meta.error}</div>
+          <Typography variant="body1" color="error">{meta.error}</Typography>
         ) : null}
       </>
     );
@@ -42,22 +48,30 @@ const LoginForm: React.FC = () => {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const handleLogin = async (values: {email: string, password: string }, { resetForm }: any) => {
     try {
-        console.log(email,password);
-        // await login(email, password);      
+        await login(email, password);
+        setErrorMessage(null);      
         resetForm();
     } catch (error) {
-      console.error('Login failed:', error);
+      resetForm();
+      if (error instanceof Error) {
+        setErrorMessage("Incorrect email or password");
+      } else {
+        setErrorMessage("An unexpected error occurred.");
+      }
+      console.error("Login failed:", error);
     }
   };
   return (
     <>
       <Typography variant="h2" sx={{
-                marginTop: '30px'
+                marginTop: "30px"
             }}>Login</Typography>
       <Typography variant="h6"  sx={{
-                margin: '20px'
+                margin: "20px"
             }}>Not a user yet? <Link to="/register">Sign up here</Link></Typography>
       <Formik
         initialValues={{
@@ -73,7 +87,7 @@ const LoginForm: React.FC = () => {
         })}
         onSubmit={handleLogin}
       >
-        {({setFieldValue}) => (<Form>
+        {({setFieldValue}) => (<StyledForm>
           <MyTextInput
             label="Email"
             name="email"
@@ -94,12 +108,18 @@ const LoginForm: React.FC = () => {
             }}
             placeholder=""
           />
-          <br />
-          <br />
-          <Button variant="contained" type="submit" sx={{
-            width: "100%",
-          }}>Login</Button>
-        </Form>)}
+          {errorMessage && (
+            <Typography color="error" sx={{
+              fontWeight: "bold",
+              fontSize: "1.2rem",
+              marginBottom: "20px",
+              marginTop: "20px",
+            }}>
+              {errorMessage}
+            </Typography>
+          )}
+          <Button variant="contained" type="submit">Login</Button>
+        </StyledForm>)}
       </Formik>
     </>
   );

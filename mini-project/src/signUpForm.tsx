@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { Typography, Button, TextField } from "@mui/material";
+import { Typography, Button, TextField, styled } from "@mui/material";
 import { Formik, Form, useField, FieldAttributes } from "formik";
 import * as Yup from "yup";
-import "./signInStyle.css";
-import "./customstyle.css";
 import { useAuth } from "./context/AuthContext";
+
+const StyledForm = styled(Form)({
+    display: "flex",
+    flexDirection: "column",
+    gap: "20px",
+  });
 
 interface MyTextInputProps extends FieldAttributes<any> {
     label: string;
@@ -15,7 +19,9 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
     const [field, meta] = useField(props);
     return (
         <>
-            <label htmlFor={props.id || props.name}>{label}</label>
+            <Typography component="label" htmlFor={props.id || props.name} sx={{
+                fontWeight: 'bold',
+            }}>{label}</Typography>
             <TextField variant="filled" className="text-input" {...field} {...props} sx={{
                 '& .MuiFilledInput-underline:before': {
                     borderBottom: 'none',
@@ -28,7 +34,7 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
                 },
             }}/>
             {meta.touched && meta.error ? (
-                <div className="error">{meta.error}</div>
+                <Typography variant="body1" color="error">{meta.error}</Typography>
             ) : null}
         </>
     );
@@ -40,14 +46,22 @@ const SignupForm: React.FC = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const handleRegister = async (values: { name: string, email: string, password: string }, { resetForm }: any) => {
+    const handleRegister = async (values: { name: string, email: string, password: string, passwordConfirm: string }, { resetForm }: any) => {
         try {
-            console.log(name,email,password);
-            // await register(values.name, values.email, values.password);
+            await register(name, email, password, passwordConfirm);
+            setErrorMessage(null);  
             resetForm();
         } catch (error) {
-            console.error('Registration failed:', error);
+            resetForm();
+            if (error instanceof Error) {
+                setErrorMessage("The email has already been taken.");
+              } else {
+                setErrorMessage("An unexpected error occurred.");
+              }
+              console.error("Sign up failed:", error);
         }
     };
 
@@ -82,7 +96,7 @@ const SignupForm: React.FC = () => {
                 onSubmit={handleRegister}
             >
                 {({ setFieldValue }) => (
-                    <Form>
+                    <StyledForm>
                         <MyTextInput
                             label="Username"
                             name="name"
@@ -117,15 +131,24 @@ const SignupForm: React.FC = () => {
                             label="Confirm password"
                             name="passwordConfirm"
                             type="password"
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                                setFieldValue("passwordConfirm", e.target.value);
+                                setPasswordConfirm(e.target.value);
+                            }}
                             placeholder=""
                         />
-                        <br />
-                        <br />
-
-                        <Button variant="contained" type="submit" sx={{
-                            width: "100%"
-                        }}>Sign up</Button>
-                    </Form>
+                        {errorMessage && (
+                        <Typography color="error" sx={{
+                            fontWeight: 'bold',
+                            fontSize: "1.2rem",
+                            marginBottom: "20px",
+                            marginTop: "20px",
+                        }}>
+                            {errorMessage}
+                        </Typography>
+                        )}
+                        <Button variant="contained" type="submit">Sign up</Button>
+                    </StyledForm>
                 )}
             </Formik>
         </>

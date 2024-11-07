@@ -5,9 +5,9 @@ import axios from 'axios';
 // Define the shape of the AuthContext
 interface AuthContextType {
   user: User | null;
-  token: string | null;
+  access_token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string) => Promise<void>;
+  register: (name: string, email: string, password: string, passwordConfirm: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -22,38 +22,67 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 // AuthProvider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
+  const [access_token, setToken] = useState<string | null>(null);
 
   const login = async (email: string, password: string) => {
     try {
-      const response = await axios.post('/api/login', { email, password });
-      const { token, user } = response.data;
+      const formData = new FormData();
+      formData.append('email', email);
+      formData.append('password', password);
+  
+      const response = await axios.post('http://laravel.test/api/auth/login', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-      setToken(token);
-      setUser(user);
+      const { access_token } = response.data;
 
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      if (!access_token) {
+        throw new Error("Invalid credentials");
+      }
+
+      setToken(access_token);
+      // setUser(newUser);
+
+      localStorage.setItem('authToken', access_token);
+      // localStorage.setItem('user', JSON.stringify(newUser.id));
+
     } catch (error) {
-      console.error('Login failed', error);
       throw error;
     }
+
   };
 
-  const register = async (name: string, email: string, password: string) => {
+  const register = async (name: string, email: string, password: string, passwordConfirm: string) => {
     try {
-      const response = await axios.post('/api/register', { name, email, password });
-      const { token, user } = response.data;
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      formData.append('password', password);
+      formData.append('password_confirmation', passwordConfirm);
 
-      setToken(token);
-      setUser(user);
+      const response = await axios.post('http://laravel.test/api/auth/register', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
-      localStorage.setItem('authToken', token);
-      localStorage.setItem('user', JSON.stringify(user));
+      const { access_token } = response.data;
+
+      if (!access_token) {
+        throw new Error("Invalid sign up");
+      }
+
+      setToken(access_token);
+      // setUser(user);
+
+      localStorage.setItem('authToken', access_token);
+      // localStorage.setItem('user', JSON.stringify(user));
     } catch (error) {
-      console.error('Registration failed', error);
       throw error;
     }
+
   };
 
   const logout = () => {
@@ -65,7 +94,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const value = {
     user,
-    token,
+    access_token,
     login,
     register,
     logout,
