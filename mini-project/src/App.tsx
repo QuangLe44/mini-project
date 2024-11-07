@@ -1,10 +1,19 @@
 import React from 'react';
 import LoginForm from './LoginForm';
 import SignupForm from './signUpForm';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import AboutPage from './about';
+
+const AppRoutes = () => {
+  const routes = useRoutes([
+    { path: '/', element: <LoginForm /> },
+    { path: '/register', element: <SignupForm /> },
+    { path: '/about', element: <AboutPage /> },
+  ]);
+  return routes;
+};
 
 const theme = createTheme({
   components: {
@@ -32,13 +41,7 @@ const App: React.FC = () => {
     <ThemeProvider theme={theme}>
       <AuthProvider>
           <BrowserRouter>
-              <Routes>
-                <Route>
-                <Route path="/" element={<LoginForm />} />
-                <Route path="/register" element={<SignupForm />} />
-                </Route>
-                <Route path="/about" element={<AboutPage />} />  
-              </Routes>       
+            <AppRoutes/>
           </BrowserRouter>
       </AuthProvider>
     </ThemeProvider>
