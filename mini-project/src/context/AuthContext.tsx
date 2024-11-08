@@ -8,6 +8,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, passwordConfirm: string) => Promise<void>;
   logout: () => void;
+  getTasks: (filters: { [key: string]: any }) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -85,11 +86,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('userID');
   };
 
+  const getTasks = async (filters = {}) => {
+    try {
+      const response = await axios.get('http://laravel.test/api/tasks', {
+        params: filters, // You can pass filters like 'name', 'status', 'priority', etc.
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem('authToken'),
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching tasks:', error);
+      throw error; // You can handle error accordingly
+    }
+  };
+  
+
   const value = {
     access_token,
     login,
     register,
     logout,
+    getTasks,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

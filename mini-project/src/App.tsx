@@ -4,13 +4,14 @@ import SignupForm from './signUpForm';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import AboutPage from './about';
+import AboutPage from './About';
+import { CssBaseline } from '@mui/material';
 
 const AppRoutes = () => {
   const routes = useRoutes([
     { path: '/', element: <LoginForm /> },
     { path: '/register', element: <SignupForm /> },
-    { path: '/about', element: <AboutPage /> },
+    { path: '/about', element: <AboutPage/> },
   ]);
   return routes;
 };
@@ -39,6 +40,7 @@ const theme = createTheme({
 const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline/>
       <AuthProvider>
           <BrowserRouter>
             <AppRoutes/>
