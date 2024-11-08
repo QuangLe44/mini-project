@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Button, TextField, styled, alpha, InputBase, Box, Select, InputLabel, MenuItem } from "@mui/material";
+import { Typography, Button, TextField, styled, alpha, InputBase, Box, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 import SearchAppBar from "./components/AppBar";
 import SearchIcon from '@mui/icons-material/Search';
 import ResponsiveGrid from "./components/TaskGrid";
@@ -7,34 +7,18 @@ import ResponsiveGrid from "./components/TaskGrid";
 const AboutPage: React.FC = () => {
 
   const [filters, setFilters] = useState({ name:'', sort_by: 'created_at', order: 'asc' });
-
   const [sort_by, setSort] = useState('created_at');
   const [order, setOrderBy] = useState('asc');
 
-  useEffect(() => {
-    setFilters({
-      name:'',
-      sort_by: 'created_at',
-      order: 'asc',
-    });
-  }, [setFilters]);
-
   const handleFilterChange = () => {
-    // Build filters object in the required format
-    const filters: any = {};
-
-    if (sort_by) {
-      filters.sort_by = sort_by;
-    }
-
-    if (order) {
-      filters.order = order;
-    }
-
-    setFilters(filters);
+    setFilters({
+      ...filters,
+      sort_by,
+      order,
+    });
   };
 
-  const Search = styled('div')(({ theme }) => ({
+  const Search = styled('div')(() => ({
     position: 'relative',
     border: '1px solid black',
     borderRadius: "10px",
@@ -70,7 +54,7 @@ const AboutPage: React.FC = () => {
     <>
     <Box sx={{
       boxSizing: "border-box",
-      backgroundColor: "gray",
+      backgroundColor: "white",
       maxWidth: "100vw",
       minHeight: "100vh",
       overflow: "auto"
@@ -80,7 +64,10 @@ const AboutPage: React.FC = () => {
         display: "flex",
         paddingTop: "3rem",
         paddingBottom: "3rem",
-        margin:"auto"
+        margin:"auto",
+        justifyContent: "center",  // Centers content horizontally
+        alignItems: "center", 
+        gap: "3rem"
       }}>
         <Search>
           <SearchIconWrapper>
@@ -91,16 +78,69 @@ const AboutPage: React.FC = () => {
             inputProps={{ 'aria-label': 'search' }}
           />
         </Search>
-      <InputLabel id="demo-select-small-label">Sort by: </InputLabel>
-      <Select 
-        labelId="demo-select-small-label"
-        id="demo-select-small"
-        label="Sort"
-        value={sort_by} onChange={(e) => setSort(e.target.value)}
-      >
-        <MenuItem value="asc">Ascending</MenuItem>
-        <MenuItem value="desc">Descending</MenuItem>
-      </Select>
+        <Box>
+          <FormControl>
+          <InputLabel id="demo-select-label" sx={{
+            color: "black"
+          }}>Order</InputLabel>
+          <Select 
+            labelId="demo-select-label"
+            id="demo-select-small"
+            label="Order"
+            value={order} onChange={(e) => setOrderBy(e.target.value)}
+            sx={{
+              minWidth: "9rem",
+              color: "black",
+              backgroundColor: "white",
+              padding: "0.3rem",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderWidth: "2px", // Set the border thickness here
+                borderColor: "black", // Optional: change border color
+              },
+              "&:hover .MuiOutlinedInput-notchedOutline": {
+                borderWidth: "2px",
+                borderColor: "#1976d2", // Optional: change border color on hover
+              },
+              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                borderWidth: "2px",
+                borderColor: "#1976d2", // Optional: change border color when focused
+              },
+            }}
+          >
+            <MenuItem value="asc">Ascending</MenuItem>
+            <MenuItem value="desc">Descending</MenuItem>
+          </Select>
+          </FormControl>
+        </Box>
+        <Box>
+          <FormControl>
+            <InputLabel id="demo-select-label" sx={{
+              color: "black"
+            }}>Sort</InputLabel>
+            <Select 
+              labelId="demo-select-label"
+              id="demo-select-small"
+              label="Sort"
+              value={sort_by} onChange={(e) => setSort(e.target.value)}
+              sx={{
+                minWidth: "9rem",
+                color: "black",
+                backgroundColor: "white",
+                padding: "0.3rem"
+              }}
+            >
+              <MenuItem value="created_at">Created</MenuItem>
+              <MenuItem value="updated_at">Updated</MenuItem>
+              <MenuItem value="priority">Priority</MenuItem>
+              <MenuItem value="status">Status</MenuItem>
+              <MenuItem value="start_date">Start time</MenuItem>
+              <MenuItem value="end_date">End time</MenuItem>
+            </Select>
+          </FormControl>
+        </Box>
+        <Button onClick={handleFilterChange} sx={{
+          width: "auto"
+        }}>Apply</Button>
       </Box> 
 
       <ResponsiveGrid filters={filters}/>

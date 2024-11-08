@@ -23,35 +23,30 @@ export default function ResponsiveGrid({ filters }: ResponsiveGridProps) {
 
     const { getTasks } = useAuth();
     const [tasks, setTasks] = useState<any[]>([]); // State to store tasks
-    const [loading, setLoading] = useState<boolean>(false); // Loading state
-    const [error, setError] = useState<string | null>(null); // Error state
   
     useEffect(() => {
         const fetchTasks = async () => {
-          setLoading(true); // Set loading state to true before fetching
-          setError(null); // Reset error state
           try {
             // const filters = {priority: "High", order_by: "asc" };
             const taskData = await getTasks(filters); // Fetch tasks with filters
             setTasks(taskData.data); // Assuming 'data' contains the list of tasks
           } catch (error) {
-            setError('Failed to fetch tasks'); // Set error message if fetch fails
-          } finally {
-            setLoading(false); // Stop loading when done
+            console.log(error)
           }
         };
     
         fetchTasks(); // Call the fetch function on component mount
-      }, []);
+      }, [filters]);
 
   return (
       <Grid container spacing={4} sx={{
-        margin: "0 1.5rem"
+        margin: "0 1.8rem"
       }}>
         {tasks.map((task: any) => (
           <Grid key={task.id} size={3}>
             <Item sx={{
-                textAlign: 'left'
+                textAlign: 'left',
+                boxShadow: "0 0 10px 2px black",
             }}>
               <Typography variant="h6">{task.name}</Typography>
               <Typography><strong>Description:</strong> {task.description}</Typography>
