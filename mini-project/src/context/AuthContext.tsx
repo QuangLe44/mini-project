@@ -6,9 +6,8 @@ import axios from 'axios';
 interface AuthContextType {
   access_token: string | null;
   login: (email: string, password: string) => Promise<void>;
-  register: (name: string, email: string, password: string, passwordConfirm: string) => Promise<void>;
+  register: (name: string, email: string, password: string, password_confirmation: string) => Promise<void>;
   logout: () => void;
-  getTasks: (filters: { [key: string]: any }) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,13 +19,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const login = async (email: string, password: string) => {
     try {
-      const formData = new FormData();
-      formData.append('email', email);
-      formData.append('password', password);
+      const requestData = {
+        email,
+        password,
+      };
   
-      const response = await axios.post('http://laravel.test/api/auth/login', formData, {
+      const response = await axios.post('http://laravel.test/api/auth/login', requestData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
 
@@ -45,20 +45,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       throw error;
     }
-
   };
 
-  const register = async (name: string, email: string, password: string, passwordConfirm: string) => {
+  const register = async (name: string, email: string, password: string, password_confirmation: string) => {
     try {
-      const formData = new FormData();
-      formData.append('name', name);
-      formData.append('email', email);
-      formData.append('password', password);
-      formData.append('password_confirmation', passwordConfirm);
+      const requestData = {
+        name,
+        email,
+        password,
+        password_confirmation,
+      };
 
-      const response = await axios.post('http://laravel.test/api/auth/register', formData, {
+      const response = await axios.post('http://laravel.test/api/auth/register', requestData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Content-Type': 'application/json',
         },
       });
 
@@ -76,7 +76,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (error) {
       throw error;
     }
-
   };
 
   const logout = () => {
@@ -86,28 +85,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('userID');
   };
 
-  const getTasks = async (filters = {}) => {
-    try {
-      const response = await axios.get('http://laravel.test/api/tasks', {
-        params: filters, // You can pass filters like 'name', 'status', 'priority', etc.
-        headers: {
-          Authorization: "Bearer " + localStorage.getItem('authToken'),
-        },
-      });
-      return response.data;
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      throw error; // You can handle error accordingly
-    }
-  };
-  
-
   const value = {
     access_token,
     login,
     register,
     logout,
-    getTasks,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

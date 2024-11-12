@@ -1,55 +1,42 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Button, TextField, styled, alpha, InputBase, Box, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
+import React, { useState, useEffect, useCallback } from "react";
+import { Box, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
 import SearchAppBar from "./components/AppBar";
 import SearchIcon from '@mui/icons-material/Search';
 import ResponsiveGrid from "./components/TaskGrid";
+import { Search, SearchIconWrapper, StyledInputBase } from "./layouts/Layout";
 
-const AboutPage: React.FC = () => {
-
+const TaskIndex: React.FC = () => {
   const [filters, setFilters] = useState({ name:'', sort_by: 'created_at', order: 'asc' });
+  const [name, setName] = useState('');
+  const [debouncedName, setDebouncedName] = useState('');
   const [sort_by, setSort] = useState('created_at');
   const [order, setOrderBy] = useState('asc');
 
-  const handleFilterChange = () => {
-    setFilters({
+  const handleFilterChange = useCallback(() => {
+    setFilters(filters => ({
       ...filters,
+      name: debouncedName,
       sort_by,
       order,
-    });
+    }));
+  }, [debouncedName, sort_by, order]);
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedName(name);
+    }, 1000);
+
+    return () => clearTimeout(handler);
+  }, [name]);
+
+  useEffect(() => {
+    handleFilterChange();
+  }, [debouncedName, sort_by, order, handleFilterChange]);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setName(e.target.value);
   };
 
-  const Search = styled('div')(() => ({
-    position: 'relative',
-    border: '1px solid black',
-    borderRadius: "10px",
-    padding: "1rem",
-    backgroundColor: "white",
-    '&:hover': {
-      backgroundColor: alpha('rgb(255, 255, 255)', 0.8),
-    },
-    width: '50%',
-  }));
-  
-  const SearchIconWrapper = styled('div')(({ theme }) => ({
-    padding: theme.spacing(1, 2),
-    height: '100%',
-    position: 'absolute',
-    pointerEvents: 'none',
-    display: 'inline',
-    alignItems: 'center',
-    justifyContent: 'center',
-  }));
-
-  const StyledInputBase = styled(InputBase)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 1),
-      // vertical padding + font size from searchIcon
-      paddingLeft: "calc(1em + " + theme.spacing(5) + ")",
-      transition: theme.transitions.create('width'),
-      width: '100%',
-    },
-  }));
   return (
     <>
     <Box sx={{
@@ -76,6 +63,8 @@ const AboutPage: React.FC = () => {
           <StyledInputBase
             placeholder="Search…"
             inputProps={{ 'aria-label': 'search' }}
+            value={name}
+            onChange={handleInputChange}
           />
         </Search>
         <Box>
@@ -88,24 +77,6 @@ const AboutPage: React.FC = () => {
             id="demo-select-small"
             label="Order"
             value={order} onChange={(e) => setOrderBy(e.target.value)}
-            sx={{
-              minWidth: "9rem",
-              color: "black",
-              backgroundColor: "white",
-              padding: "0.3rem",
-              "& .MuiOutlinedInput-notchedOutline": {
-                borderWidth: "2px", // Set the border thickness here
-                borderColor: "black", // Optional: change border color
-              },
-              "&:hover .MuiOutlinedInput-notchedOutline": {
-                borderWidth: "2px",
-                borderColor: "#1976d2", // Optional: change border color on hover
-              },
-              "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-                borderWidth: "2px",
-                borderColor: "#1976d2", // Optional: change border color when focused
-              },
-            }}
           >
             <MenuItem value="asc">Ascending</MenuItem>
             <MenuItem value="desc">Descending</MenuItem>
@@ -122,12 +93,6 @@ const AboutPage: React.FC = () => {
               id="demo-select-small"
               label="Sort"
               value={sort_by} onChange={(e) => setSort(e.target.value)}
-              sx={{
-                minWidth: "9rem",
-                color: "black",
-                backgroundColor: "white",
-                padding: "0.3rem"
-              }}
             >
               <MenuItem value="created_at">Created</MenuItem>
               <MenuItem value="updated_at">Updated</MenuItem>
@@ -138,15 +103,11 @@ const AboutPage: React.FC = () => {
             </Select>
           </FormControl>
         </Box>
-        <Button onClick={handleFilterChange} sx={{
-          width: "auto"
-        }}>Apply</Button>
       </Box> 
-
       <ResponsiveGrid filters={filters}/>
 </Box>
     </>
   );
 };
 
-export default AboutPage;
+export default TaskIndex;

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
-import { useAuth } from '../context/AuthContext';
 import { Typography, Paper } from "@mui/material";
+import axios from 'axios';
+import { useAuth } from "../context/AuthContext";
 
 interface ResponsiveGridProps {
     filters: any;
@@ -19,23 +20,38 @@ const Item = styled(Paper)(({ theme }) => ({
   }),
 }));
 
-export default function ResponsiveGrid({ filters }: ResponsiveGridProps) {
 
-    const { getTasks } = useAuth();
+
+export default function ResponsiveGrid({ filters }: ResponsiveGridProps) {
     const [tasks, setTasks] = useState<any[]>([]); // State to store tasks
+    const { access_token } = useAuth();
+
+    const getTasks = async (filters = {}) => {
+      try {
+        const response = await axios.get('http://laravel.test/api/tasks', {
+          params: filters,
+          headers: {
+            Authorization: "Bearer " + access_token,
+          },
+        });
+        return response.data;
+      } catch (error) {
+        console.error('Error fetching tasks:', error);
+        throw error;
+      }
+    };
   
     useEffect(() => {
         const fetchTasks = async () => {
           try {
-            // const filters = {priority: "High", order_by: "asc" };
-            const taskData = await getTasks(filters); // Fetch tasks with filters
-            setTasks(taskData.data); // Assuming 'data' contains the list of tasks
+            const taskData = await getTasks(filters); 
+            setTasks(taskData.data);
           } catch (error) {
             console.log(error)
           }
         };
     
-        fetchTasks(); // Call the fetch function on component mount
+        fetchTasks();
       }, [filters]);
 
   return (

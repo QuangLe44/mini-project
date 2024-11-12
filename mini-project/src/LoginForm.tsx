@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { Formik, Form, useField, FieldAttributes } from "formik";
-import { Typography, Button, TextField, styled, Link } from "@mui/material";
+import { Typography, Button, TextField, styled, Link} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import { useAuth } from "./context/AuthContext";
-import { StyledBody, StyledBox } from "./components/Layout";
+import { StyledBody, StyledBox } from "./layouts/Layout";
 
 const StyledForm = styled(Form)({
   display: "flex",
@@ -57,7 +57,7 @@ const LoginForm: React.FC = () => {
         await login(email, password);
         setErrorMessage(null);      
         resetForm();
-        navigate("/about");
+        navigate("/index");
     } catch (error) {
       resetForm();
       if (error instanceof Error) {
@@ -127,7 +127,7 @@ const LoginForm: React.FC = () => {
           </StyledForm>)}
         </Formik>
       </StyledBox>
-    </StyledBody>      
+    </StyledBody>
     </>
   );
 };
