@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Box, Select, InputLabel, MenuItem, FormControl } from "@mui/material";
-import SearchAppBar from "./components/AppBar";
 import SearchIcon from '@mui/icons-material/Search';
-import ResponsiveGrid from "./components/TaskGrid";
+import ResponsiveGrid from "./components/ResponsiveGrid";
 import { Search, SearchIconWrapper, StyledInputBase } from "./layouts/Layout";
 
 const TaskIndex: React.FC = () => {
@@ -24,8 +23,7 @@ const TaskIndex: React.FC = () => {
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedName(name);
-    }, 1000);
-
+    }, 500);
     return () => clearTimeout(handler);
   }, [name]);
 
@@ -39,23 +37,16 @@ const TaskIndex: React.FC = () => {
 
   return (
     <>
-    <Box sx={{
-      boxSizing: "border-box",
-      backgroundColor: "white",
-      maxWidth: "100vw",
-      minHeight: "100vh",
-      overflow: "auto"
-    }}>
-    <SearchAppBar/>   
+    <Box>
       <Box sx={{
-        display: "flex",
-        paddingTop: "3rem",
-        paddingBottom: "3rem",
-        margin:"auto",
-        justifyContent: "center",  // Centers content horizontally
-        alignItems: "center", 
-        gap: "3rem"
-      }}>
+                display: "flex",
+                paddingTop: "3rem",
+                paddingBottom: "3rem",
+                margin:"auto",
+                justifyContent: "center",
+                alignItems: "center", 
+                gap: "3rem"
+            }}>
         <Search>
           <SearchIconWrapper>
             <SearchIcon />
@@ -67,7 +58,6 @@ const TaskIndex: React.FC = () => {
             onChange={handleInputChange}
           />
         </Search>
-        <Box>
           <FormControl>
           <InputLabel id="demo-select-label" sx={{
             color: "black"
@@ -82,8 +72,6 @@ const TaskIndex: React.FC = () => {
             <MenuItem value="desc">Descending</MenuItem>
           </Select>
           </FormControl>
-        </Box>
-        <Box>
           <FormControl>
             <InputLabel id="demo-select-label" sx={{
               color: "black"
@@ -103,9 +91,8 @@ const TaskIndex: React.FC = () => {
             </Select>
           </FormControl>
         </Box>
-      </Box> 
       <ResponsiveGrid filters={filters}/>
-</Box>
+      </Box>
     </>
   );
 };

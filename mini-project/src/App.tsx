@@ -6,12 +6,21 @@ import { AuthProvider } from './context/AuthContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import TaskIndex from './TaskIndex';
+import AuthRoute from './components/AuthRoute';
 
 const AppRoutes = () => {
   const routes = useRoutes([
     { path: '/', element: <LoginForm /> },
     { path: '/register', element: <SignupForm /> },
-    { path: '/index', element: <TaskIndex/> },
+    {
+      path: '/',
+      element: <AuthRoute />, // Parent protected route
+      children: [
+          { path: 'index', element: <TaskIndex /> },
+          // { path: 'profile', element: <ProfilePage /> },
+          // { path: 'settings', element: <SettingsPage /> },
+      ],
+    },
   ]);
   return routes;
 };
