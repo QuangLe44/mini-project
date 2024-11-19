@@ -9,30 +9,32 @@ import Menu from '@mui/material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import { useAuth } from '../context/AuthContext';
 import { Button, Divider } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
-export default function SearchAppBar() {
-  const { getUserInfo, user } = useAuth();
+interface User {
+  id: number;
+  name: string;
+  email: string;
+  is_admin: boolean;
+}
+
+interface SearchAppBarProps {
+  user: User | null;
+}
+
+export default function SearchAppBar({user}: SearchAppBarProps) {
   const { logout } = useAuth();
-  const [loading, setLoading] = React.useState(true);  
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [userAnchor, setUserAnchor] = React.useState<null | HTMLElement>(null);
-  // const [anchorE3, setAnchorE3] = React.useState<null | HTMLElement>(null);
+  const [taskAnchor, setTaskAnchor] = React.useState<null | HTMLElement>(null);
+  const navigate = useNavigate();
   const isMenuOpen = Boolean(anchorEl);
   const isUserOpen = Boolean(userAnchor);
+  const isTaskOpen = Boolean(taskAnchor);
 
   const handleLogout = () =>{
       logout();
   };
-
-  React.useEffect(() => {
-    if (!user) {
-      getUserInfo().finally(
-        () => setLoading(false)
-      );
-    } else {
-      setLoading(false); 
-    }
-  }, [user, getUserInfo]);
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -42,9 +44,14 @@ export default function SearchAppBar() {
     setUserAnchor(event.currentTarget);
   };
 
+  const handleTaskTabOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setTaskAnchor(event.currentTarget);
+  };
+
   const handleMenuClose = () => {
     setAnchorEl(null);
     setUserAnchor(null);
+    setTaskAnchor(null);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -92,13 +99,38 @@ export default function SearchAppBar() {
     </Menu>
   );
 
+  const taskId = 'primary-search-task';
+  const renderTaskTab = (
+    <Menu
+      anchorEl={taskAnchor}
+      anchorOrigin={{
+        vertical: 'top',
+        horizontal: 'left',
+      }}
+      id={taskId}
+      keepMounted
+      transformOrigin={{
+        vertical: 'top',
+        horizontal: 'right',
+      }}
+      open={isTaskOpen}
+      onClose={handleMenuClose}
+    >
+      <MenuItem onClick={() => navigate("/index")}>Task list</MenuItem>
+      {user?.is_admin && (
+        <MenuItem>New task</MenuItem>
+      )}
+    </Menu>
+  );
+
   return (
+    <>
     <Box sx={{ 
         maxWidth: "100%"
      }}>
       <AppBar position="static">
         <Toolbar>
-            <Box sx={{ flexGrow: 1 }} />
+          <Box sx={{ flexGrow: 1 }} />
           <Typography
             variant="h2"
             noWrap
@@ -108,7 +140,7 @@ export default function SearchAppBar() {
             Task
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          {!loading && user?.is_admin && (
+          {user?.is_admin && (
           <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
           <Button sx={{
             margin: "0"
@@ -125,6 +157,21 @@ export default function SearchAppBar() {
           </Button>
           </Box>
           )}
+          <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
+            <Button sx={{
+              margin: "0"
+            }}
+              variant="outlined"
+              size="large"
+              aria-label="tasks tab"
+              aria-controls={taskId}
+              aria-haspopup="true"
+              onClick={handleTaskTabOpen}
+              color="inherit"
+            >
+              Tasks
+            </Button>
+          </Box>
           <Box sx={{ display: 'flex' }}>
             <IconButton
               size="large"
@@ -141,8 +188,11 @@ export default function SearchAppBar() {
         </Toolbar>
       </AppBar>
       {renderUserTab}
+      {renderTaskTab}
       {renderMenu}
     </Box>
+    </>
   );
+  
 }
 

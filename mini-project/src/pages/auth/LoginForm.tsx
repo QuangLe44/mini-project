@@ -3,8 +3,8 @@ import { Formik, Form, useField, FieldAttributes } from "formik";
 import { Typography, Button, TextField, styled, Link} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { useAuth } from "./context/AuthContext";
-import { StyledBody, StyledBox } from "./layouts/Layout";
+import { useAuth } from "../../context/AuthContext";
+import { StyledBody, StyledBox } from "../../layouts/Layout";
 
 const StyledForm = styled(Form)({
   display: "flex",

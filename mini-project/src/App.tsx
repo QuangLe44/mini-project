@@ -1,12 +1,13 @@
 import React from 'react';
-import LoginForm from './LoginForm';
-import SignupForm from './signUpForm';
+import LoginForm from './pages/auth/LoginForm';
+import SignupForm from './pages/auth/signUpForm';
 import { BrowserRouter, useRoutes } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import TaskIndex from './TaskIndex';
+import TaskIndex from './pages/tasks/TaskIndex';
 import AuthRoute from './components/AuthRoute';
+import TaskDetail from './pages/tasks/TaskDetail';
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -14,11 +15,10 @@ const AppRoutes = () => {
     { path: '/register', element: <SignupForm /> },
     {
       path: '/',
-      element: <AuthRoute />, // Parent protected route
+      element: <AuthRoute />,
       children: [
           { path: 'index', element: <TaskIndex /> },
-          // { path: 'profile', element: <ProfilePage /> },
-          // { path: 'settings', element: <SettingsPage /> },
+          { path: 'index/detail/:id', element: <TaskDetail /> },
       ],
     },
   ]);

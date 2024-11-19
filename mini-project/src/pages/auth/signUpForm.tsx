@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Typography, Button, TextField, styled } from "@mui/material";
 import { Formik, Form, useField, FieldAttributes } from "formik";
 import * as Yup from "yup";
-import { useAuth } from "./context/AuthContext";
-import { StyledBody, StyledBox } from "./layouts/Layout";
+import { useAuth } from "../../context/AuthContext";
+import { StyledBody, StyledBox } from "../../layouts/Layout";
 
 const StyledForm = styled(Form)({
     display: "flex",

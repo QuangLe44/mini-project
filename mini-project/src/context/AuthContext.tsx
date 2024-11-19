@@ -1,5 +1,5 @@
 // src/contexts/AuthContext.tsx
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 
@@ -12,12 +12,12 @@ interface User {
 
 // Define the shape of the AuthContext
 interface AuthContextType {
-  user: User | null;
   access_token: string | null;
+  user: User | null;
   authenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string, password_confirmation: string) => Promise<void>;
-  getUserInfo: () => Promise<User | null>;
+  getUserInfo: () => Promise<void>;
   logout: () => void;
 }
 
@@ -86,25 +86,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
-  const getUserInfo = async (): Promise<User | null> => {
+  const getUserInfo = async (): Promise<void> => {
     try {
-        const response = await axios.post<User>('http://laravel.test/api/me', {}, {
-                headers: {
-                  Authorization: "Bearer " + access_token,
-                },
-            }
-        );
-
-        const userData = response.data;
-        setUser(userData);
-        return userData;
+      const response = await axios.post<User>('http://laravel.test/api/me', {}, {
+        headers: {
+          Authorization: 'Bearer ' + access_token,
+        },
+      });
+  
+      const userData = response.data;
+      setUser(userData);
     } catch (error) {
-        console.error('Error fetching user info:', error);
-        setUser(null);
-        return null;
+      console.error('Error fetching user info:', error);
     }
-};
-
+  };
   const logout = () => {
     localStorage.removeItem('access_token');   
     setToken(null);
