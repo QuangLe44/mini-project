@@ -94,7 +94,7 @@ export default function SearchAppBar({user}: SearchAppBarProps) {
       open={isUserOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem>User list</MenuItem>
+      <MenuItem onClick={() => navigate("/index/users", { state: { user } })}>User list</MenuItem>
       <MenuItem>New user</MenuItem>
     </Menu>
   );

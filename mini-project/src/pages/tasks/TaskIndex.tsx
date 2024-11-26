@@ -93,6 +93,7 @@ const TaskIndex: React.FC = () => {
         const taskData = await getTasks(filters);
         const totalTasks = taskData.total;
         setTotal(totalTasks);
+        console.log("getTotal")
       } catch (error) {
         console.log(error)
       }

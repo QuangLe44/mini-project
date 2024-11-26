@@ -8,6 +8,8 @@ import { CssBaseline } from '@mui/material';
 import TaskIndex from './pages/tasks/TaskIndex';
 import AuthRoute from './components/AuthRoute';
 import TaskDetail from './pages/tasks/TaskDetail';
+import UserList from './pages/user/UserList';
+import UnauthorizedPage from './pages/auth/Unauthorized';
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -18,7 +20,9 @@ const AppRoutes = () => {
       element: <AuthRoute />,
       children: [
           { path: 'index', element: <TaskIndex /> },
-          { path: 'index/detail/:id', element: <TaskDetail /> },
+          { path: 'index/users', element: <UserList /> },
+          { path: 'index/:id', element: <TaskDetail /> },
+          { path: 'index/unauthorized', element: <UnauthorizedPage/> },
       ],
     },
   ]);

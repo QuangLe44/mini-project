@@ -144,6 +144,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
           }
         };
         fetchTasks();
+        console.log("getTasks")
       }, [filters, setRowsPerPage, setTotal]);
 
   return (
@@ -158,7 +159,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
                 textAlign: 'left',
                 boxShadow: "0 0 10px 2px black",
             }}>
-              <Typography variant="h5" onClick={() => navigate(`/index/detail/${task.id}`, { state: { user } })}
+              <Typography variant="h5" onClick={() => navigate(`/index/${task.id}`, { state: { user } })}
                   sx={{
                     cursor: 'pointer',
                     color: 'inherit',
@@ -195,7 +196,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
                   width: '25%',
                   margin: '0'
                 }}
-                onClick={() => navigate(`/index/detail/${task.id}`, { state: { user } })}
+                onClick={() => navigate(`/index/${task.id}`, { state: { user } })}
                 >
                   Details
                 </Button>

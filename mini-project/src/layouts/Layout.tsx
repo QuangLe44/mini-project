@@ -1,4 +1,4 @@
-import { Box, styled, alpha, InputBase} from '@mui/material';
+import { Box, styled, alpha, InputBase, TableCell} from '@mui/material';
 
 export const StyledBody = styled(Box)({
   boxSizing: "border-box",
@@ -51,5 +51,15 @@ export const StyledInputBase = styled(InputBase)(({ theme }) => ({
     transition: theme.transitions.create('width'),
     width: '100%',
   },
+}));
+
+export const StyledCell = styled(TableCell)(({ theme }) => ({
+  textAlign: "center",
+}));
+
+export const StyledHead = styled(TableCell)(({ theme }) => ({
+  textAlign: "center",
+  fontSize: "1.2rem",
+  fontWeight: "bold"
 }));
 

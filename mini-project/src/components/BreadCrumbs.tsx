@@ -15,11 +15,19 @@ export default function DynamicBreadcrumbs() {
   const navigate = useNavigate();
 
   const breadcrumbs = pathnames.map((value, index) => {
+    if (/^\d+$/.test(value)) {
+      return (
+        <Typography key={`detail-${index}`} sx={{ color: 'text.primary', fontSize: '1.2rem' }}>
+        Detail
+        </Typography>
+      );
+    }
+
     const to = `/${pathnames.slice(0, index + 1).join('/')}`;
 
     return index === pathnames.length - 1 ? (
       <Typography key={to}  sx={{ color: 'text.primary', fontSize: '1.2rem' }}>
-        {capitalize(value)} 
+        {capitalize(value)}
       </Typography>
     ) : (
       <Link
