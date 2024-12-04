@@ -123,7 +123,6 @@ const CreateUser: React.FC = () => {
                 onSubmit={(values) => {
                     const handleRegister = async () => {
                     try {
-                        console.log(values);
                         await createUser(values.name, values.email, values.admin, values.password, values.passwordConfirm);
                         setErrorMessage(null);  
                         navigate("/index/users", { state: { currentUser } });

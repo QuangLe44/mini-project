@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { Box, Paper, Typography, Button, TextField, FormControl, MenuItem, Select, InputLabel, inputLabelClasses, styled, SelectChangeEvent, TextFieldProps} from "@mui/material";
+import React from "react";
+import { Box, Paper, Typography, Button, TextField, FormControl, MenuItem, Select, InputLabel, styled, SelectChangeEvent } from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Formik, Form, useField, FieldAttributes } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const StyledForm = styled(Form)({
@@ -41,7 +41,8 @@ const NewTask: React.FC = () => {
                 minWidth: "30%",
                 justifyContent: "center",
                 alignItems: "center",
-                padding: '16px'
+                padding: '16px',
+                marginBottom: "20px"
             }}>
                   <Formik
                     initialValues={{
@@ -106,7 +107,7 @@ const NewTask: React.FC = () => {
                                 onBlur={handleBlur}
                                 error={Boolean(errors.name && touched.name)}
                             />
-                            {errors.name && touched.name && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>errors.name</Typography>)}
+                            {errors.name && touched.name && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>{errors.name}</Typography>)}
                             <TextField
                                 label="Description"
                                 name="description"
@@ -117,7 +118,7 @@ const NewTask: React.FC = () => {
                                 onBlur={handleBlur}
                                 error={Boolean(errors.description && touched.description)}
                             />
-                            {errors.description && touched.description && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>errors.name</Typography>)}
+                            {errors.description && touched.description && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>{errors.description}</Typography>)}
                             <FormControl fullWidth>
                                 <InputLabel>Status</InputLabel>
                                 <Select
@@ -162,7 +163,7 @@ const NewTask: React.FC = () => {
                                 onBlur={handleBlur}
                                 error={Boolean(errors.start_date && touched.start_date)}
                             />
-                            {errors.start_date && touched.start_date && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>errors.name</Typography>)}
+                            {errors.start_date && touched.start_date && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>{errors.start_date}</Typography>)}
                             <TextField
                                 label="End Date"
                                 name="end_date"
@@ -177,7 +178,7 @@ const NewTask: React.FC = () => {
                                 onBlur={handleBlur}
                                 error={Boolean(errors.end_date && touched.end_date)}
                             />
-                            {errors.end_date && touched.end_date && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>errors.name</Typography>)}
+                            {errors.end_date && touched.end_date && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>{errors.end_date}</Typography>)}
                             <Box sx={{ 
                                 display: "flex", 
                                 gap: "10px", 

@@ -185,46 +185,46 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
                   >
                     Delete
                   </Button>
-                  <Dialog 
-                      sx={{
-                        margin: "0px",
-                        padding: "0px"
-                      }}
-                      open={open}
-                      onClose={handleClose}
-                      aria-labelledby="delete-dialog"
-                      aria-describedby="delete-dialog-description"
-                    >
-                      <DialogTitle id="delete-dialog-title">
-                        {"Are you sure?"}
-                      </DialogTitle>
-                      <DialogActions>
-                        <Button variant="outlined" sx={{
-                          width: '50%',
-                          margin: '0'
-                        }} onClick={handleClose}
-                        >
-                          No
-                        </Button>
-                        <Button variant="outlined" sx={{
-                          width: '50%',
-                          margin: '0'
-                        }} onClick={() => {
-                          deleteTask(selectedTaskId);
-                          setOpen(false);
-                          window.location.reload();
-                        }}
-                        >
-                          Yes
-                        </Button>
-                      </DialogActions>
-                  </Dialog>
                 </>
                 )}
               </Box>
             </Item>
           </Grid>
         )})}
+        <Dialog 
+            sx={{
+              margin: "0px",
+              padding: "0px",
+              zIndex: "5"
+            }}
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="delete-dialog"
+            >
+            <DialogTitle id="delete-dialog">
+              {"Are you sure?"}
+            </DialogTitle>
+            <DialogActions>
+              <Button variant="outlined" sx={{
+                width: '50%',
+                margin: '0'
+              }} onClick={handleClose}
+              >
+                No
+              </Button>
+              <Button variant="outlined" sx={{
+                width: '50%',
+                margin: '0'
+              }} onClick={() => {
+                deleteTask(selectedTaskId);
+                setOpen(false);
+                window.location.reload();
+              }}
+              >
+                Yes
+              </Button>
+            </DialogActions>
+        </Dialog>
       </Grid>
   );
 }

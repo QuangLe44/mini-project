@@ -205,9 +205,8 @@ const UserDetail: React.FC = () => {
                                       open={open}
                                       onClose={handleClose}
                                       aria-labelledby="delete-dialog"
-                                      aria-describedby="delete-dialog-email"
                                       >
-                                      <DialogTitle id="delete-dialog-title">
+                                      <DialogTitle id="delete-dialog">
                                           {"Are you sure?"}
                                       </DialogTitle>
                                       <DialogActions>

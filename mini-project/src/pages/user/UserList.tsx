@@ -174,44 +174,43 @@ const UserList: React.FC = () => {
                       >
                         Delete
                     </Button>
-                    <Dialog 
-                        sx={{
-                            margin: "0px",
-                            padding: "0px"
-                        }}
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="delete-dialog"
-                        aria-describedby="delete-dialog-description"
-                        >
-                        <DialogTitle id="delete-dialog-title">
-                            {"Are you sure?"}
-                        </DialogTitle>
-                        <DialogActions>
-                            <Button variant="outlined" sx={{
-                            width: '50%',
-                            margin: '0'
-                            }} onClick={handleClose}
-                            >
-                            No
-                            </Button>
-                            <Button variant="outlined" sx={{
-                            width: '50%',
-                            margin: '0'
-                            }} onClick={() => {
-                            deleteUser(selectedTaskId);
-                            window.location.reload();
-                            }}
-                            >
-                            Yes
-                            </Button>
-                        </DialogActions>
-                      </Dialog>
                 </StyledCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
+        <Dialog 
+          sx={{
+              margin: "0px",
+              padding: "0px"
+          }}
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="delete-dialog"
+          >
+          <DialogTitle id="delete-dialog">
+              {"Are you sure?"}
+          </DialogTitle>
+          <DialogActions>
+              <Button variant="outlined" sx={{
+              width: '50%',
+              margin: '0'
+              }} onClick={handleClose}
+              >
+              No
+              </Button>
+              <Button variant="outlined" sx={{
+              width: '50%',
+              margin: '0'
+              }} onClick={() => {
+              deleteUser(selectedTaskId);
+              window.location.reload();
+              }}
+              >
+              Yes
+              </Button>
+          </DialogActions>
+        </Dialog>
         <Box sx={{ 
           alignSelf: 'flex-start',
           width:"30%",
@@ -231,7 +230,7 @@ const UserList: React.FC = () => {
           rowsPerPageOptions={[5, 10, 25, 50, 100]}
           labelRowsPerPage="Users per page:"
           />
-      </Box>
+        </Box>
       </Box>
     </>
   );

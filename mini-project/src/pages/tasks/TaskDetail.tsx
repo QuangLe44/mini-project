@@ -81,8 +81,6 @@ const TaskDetail: React.FC = () => {
       };
       fetchTask();
     }, [id]);
-    console.log(updatedTask.name)
-    console.log(updatedTask)
 
     if (!updatedTask.name) {
       return (
@@ -266,14 +264,14 @@ const TaskDetail: React.FC = () => {
                                   <Dialog 
                                       sx={{
                                           margin: "0px",
-                                          padding: "0px"
+                                          padding: "0px",
+                                          zIndex: "5"               
                                       }}
                                       open={open}
                                       onClose={handleClose}
                                       aria-labelledby="delete-dialog"
-                                      aria-describedby="delete-dialog-description"
                                       >
-                                      <DialogTitle id="delete-dialog-title">
+                                      <DialogTitle id="delete-dialog">
                                           {"Are you sure?"}
                                       </DialogTitle>
                                       <DialogActions>
