@@ -9,10 +9,20 @@ const capitalize = (str: string) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
   };
 
-export default function DynamicBreadcrumbs() {
+  interface User {
+    id: number;
+    name: string;
+    email: string;
+    is_admin: boolean;
+  }
+  
+  interface BreadCrumbsProps {
+    user: User | null;
+  }  
+
+export default function DynamicBreadcrumbs({user}: BreadCrumbsProps) {
   const location = useLocation(); // Get the current location
   const pathnames = location.pathname.split('/').filter((x) => x);
-  const navigate = useNavigate();
 
   const breadcrumbs = pathnames.map((value, index) => {
     if (/^\d+$/.test(value)) {
@@ -23,23 +33,22 @@ export default function DynamicBreadcrumbs() {
       );
     }
 
-    const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-
+    const destination = `/${pathnames.slice(0, index + 1).join('/')}`;
     return index === pathnames.length - 1 ? (
-      <Typography key={to}  sx={{ color: 'text.primary', fontSize: '1.2rem' }}>
+      <Typography key={destination}  sx={{ color: 'text.primary', fontSize: '1.2rem' }}>
         {capitalize(value)}
       </Typography>
     ) : (
       <Link
         underline="hover"
-        key={to}
+        key={destination}
         color="inherit"
         component={RouterLink}
-        to={to}
-        onClick={() => navigate(to)}
+        to = {destination}
+        state={user}
         sx={{ fontSize: '1.2rem' }}
       >
-        {capitalize(value)} 
+        {capitalize(value)}
       </Link>
     );
   });

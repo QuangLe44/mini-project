@@ -18,8 +18,6 @@ interface MyTextInputProps extends FieldAttributes<any> {
   }
 
 const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
-    // useField() returns [formik.getFieldProps(), formik.getFieldMeta()]
-    // which we can spread on <input> and alse replace ErrorMessage entirely.
     const [field, meta] = useField(props);
     return (
       <>
@@ -48,26 +46,8 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  const handleLogin = async (values: {email: string, password: string }, { resetForm }: any) => {
-    try {
-        await login(email, password);
-        setErrorMessage(null);      
-        resetForm();
-        navigate("/index");
-    } catch (error) {
-      resetForm();
-      if (error instanceof Error) {
-        setErrorMessage("Incorrect email or password");
-      } else {
-        setErrorMessage("An unexpected error occurred.");
-      }
-      console.error("Login failed:", error);
-    }
-  };
   return (
     <>
     <StyledBody>
@@ -90,7 +70,24 @@ const LoginForm: React.FC = () => {
             password: Yup.string()
               .required("Required")
           })}
-          onSubmit={handleLogin}
+          onSubmit={(values, { resetForm }) => {
+            const handleLogin = async () => {
+              try {
+                  await login(values.email, values.password);
+                  setErrorMessage(null);
+                  navigate("/index");
+              } catch (error) {
+                if (error instanceof Error) {
+                  resetForm();
+                  setErrorMessage("Incorrect email or password");
+                } else {
+                  setErrorMessage("An unexpected error occurred.");
+                }
+                console.error("Login failed:", error);
+              }
+            };
+            handleLogin();
+          }}
         >
           {({setFieldValue}) => (<StyledForm>
             <MyTextInput
@@ -99,7 +96,7 @@ const LoginForm: React.FC = () => {
               type="email"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFieldValue("email", e.target.value)              
-                setEmail(e.target.value)
+                // setEmail(e.target.value)
               }}
               placeholder=""
             />
@@ -109,7 +106,7 @@ const LoginForm: React.FC = () => {
               type="password"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFieldValue("password", e.target.value)              
-                setPassword(e.target.value)
+                // setPassword(e.target.value)
               }}
               placeholder=""
             />

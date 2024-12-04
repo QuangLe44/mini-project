@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableHead, TableRow, Box, Button, TablePagination, Typography } from '@mui/material';
+import { Table, TableBody, TableHead, TableRow, Box, Button, TablePagination, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import { StyledCell, StyledHead, Search, SearchIconWrapper, StyledInputBase } from '../../layouts/Layout';
 import SearchIcon from '@mui/icons-material/Search';
@@ -21,10 +21,22 @@ const UserList: React.FC = () => {
   const [page, setPage] = useState(0);
   const [total, setTotal] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [open, setOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState<string>("");
   const location = useLocation();
   const currentUser = location.state?.user;
   const navigate = useNavigate();
   const { access_token } = useAuth(); 
+
+  const handleClickOpen = (taskId: string) => {
+    setSelectedTaskId(taskId);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setSelectedTaskId("");
+    setOpen(false);
+  };
 
   const handleChangePage = (
     event: React.MouseEvent<HTMLButtonElement> | null,
@@ -44,9 +56,9 @@ const UserList: React.FC = () => {
     setSearch(e.target.value);
   };  
 
-  const deleteUser = async (userId: number): Promise<void> => {
+  const deleteUser = async (userId: string): Promise<void> => {
     try {
-        await axios.delete(`http://laravel.test/api/delete/${userId}`, {
+        await axios.delete(`http://laravel.test/api/users/${userId}`, {
             headers: {
                 Authorization: "Bearer " + access_token,
             },
@@ -58,7 +70,7 @@ const UserList: React.FC = () => {
 
   const getUsers = async () => {
     try {
-      const response = await axios.get('http://laravel.test/api/index', {
+      const response = await axios.get('http://laravel.test/api/users', {
           params: debouncedSearch,
           headers: {
               Authorization: 'Bearer ' + access_token,
@@ -99,7 +111,7 @@ const UserList: React.FC = () => {
     return () => clearTimeout(handler);
   }, [search, page, rowsPerPage]);
 
-  if (!currentUser?.is_admin) {
+  if (currentUser && !currentUser?.is_admin) {
     navigate("/index/unauthorized", { replace: true });
     return null; 
   }
@@ -145,7 +157,9 @@ const UserList: React.FC = () => {
                       maxWidth:"40%", 
                       margin: "15px 20px 15px 0",
                       padding:"5px 0 5px 0"
-                      }}>
+                      }}
+                      onClick={() => navigate(`/index/users/${user.id}`, { state: { currentUser } })}
+                      >
                         Detail
                     </Button>
                     <Button 
@@ -156,13 +170,43 @@ const UserList: React.FC = () => {
                       margin: "15px 0 15px 0",
                       padding: "5px 0 5px 0"
                       }}
-                      onClick={() => {
-                        deleteUser(user.id);
-                        window.location.reload();
-                      }}
+                      onClick={() => handleClickOpen(user.id)}
                       >
                         Delete
                     </Button>
+                    <Dialog 
+                        sx={{
+                            margin: "0px",
+                            padding: "0px"
+                        }}
+                        open={open}
+                        onClose={handleClose}
+                        aria-labelledby="delete-dialog"
+                        aria-describedby="delete-dialog-description"
+                        >
+                        <DialogTitle id="delete-dialog-title">
+                            {"Are you sure?"}
+                        </DialogTitle>
+                        <DialogActions>
+                            <Button variant="outlined" sx={{
+                            width: '50%',
+                            margin: '0'
+                            }} onClick={handleClose}
+                            >
+                            No
+                            </Button>
+                            <Button variant="outlined" sx={{
+                            width: '50%',
+                            margin: '0'
+                            }} onClick={() => {
+                            deleteUser(selectedTaskId);
+                            window.location.reload();
+                            }}
+                            >
+                            Yes
+                            </Button>
+                        </DialogActions>
+                      </Dialog>
                 </StyledCell>
               </TableRow>
             ))}

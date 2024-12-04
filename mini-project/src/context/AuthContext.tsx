@@ -43,7 +43,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
 
-      const access_token = response.data.access_token;
+      const access_token = response.data.token;
       localStorage.setItem('access_token', access_token);
       setToken(access_token);
       authenticated = !!access_token;
@@ -72,7 +72,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         },
       });
 
-      const access_token = response.data.access_token;
+      const access_token = response.data.token;
       localStorage.setItem('access_token', access_token);
       setToken(access_token);
       authenticated = !!access_token;

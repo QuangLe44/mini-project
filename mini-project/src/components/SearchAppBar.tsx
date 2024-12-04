@@ -94,8 +94,18 @@ export default function SearchAppBar({user}: SearchAppBarProps) {
       open={isUserOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => navigate("/index/users", { state: { user } })}>User list</MenuItem>
-      <MenuItem>New user</MenuItem>
+      <MenuItem onClick={() => {
+        navigate("/index/users", { state: { user } });
+        setUserAnchor(null);
+      }}>
+        User list
+      </MenuItem>
+      <MenuItem onClick={() => {
+        navigate("index/users/new", { state: { user } });
+        setUserAnchor(null);
+      }}>
+        New user
+      </MenuItem>
     </Menu>
   );
 
@@ -116,9 +126,19 @@ export default function SearchAppBar({user}: SearchAppBarProps) {
       open={isTaskOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={() => navigate("/index")}>Task list</MenuItem>
+      <MenuItem onClick={() => {
+        navigate("/index")
+        setTaskAnchor(null);
+      }}>
+        Task list
+      </MenuItem>
       {user?.is_admin && (
-        <MenuItem>New task</MenuItem>
+        <MenuItem onClick={() => {
+          navigate("/index/new", { state: { user } });
+          setTaskAnchor(null);
+        }}>
+          New task
+        </MenuItem>
       )}
     </Menu>
   );

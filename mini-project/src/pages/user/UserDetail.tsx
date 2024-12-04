@@ -14,83 +14,79 @@ const StyledForm = styled(Form)({
   alignItems: "center",
 });
 
-const TaskDetail: React.FC = () => {
+const UserDetail: React.FC = () => {
     const { access_token } = useAuth();  
     const [open, setOpen] = useState(false);
-    const [selectedTaskId, setSelectedTaskId] = useState<string>();
+    const [selectedUserId, setSelectedUserId] = useState<string>();
     const { id } = useParams<{ id: string }>();
     const location = useLocation();
-    const user = location.state?.user;
+    const currentUser = location.state?.currentUser;
     const navigate = useNavigate();
-    const [updatedTask, setUpdatedTask] = useState({
-      name: "",
-      description: "",
-      status: "",
-      priority: "",
-      start_date: "",
-      end_date: "",
+    const [updatedUser, setUpdatedUser] = useState({
+        id: 0,
+        name: "",
+        is_admin: ""
     });
 
-    const deleteTask = async (taskId: string): Promise<void> => {
+    const deleteUser = async (userID: string): Promise<void> => {
         try {
-            await axios.delete(`http://laravel.test/api/tasks/${taskId}`, {
+            await axios.delete(`http://laravel.test/api/users/${userID}`, {
                 headers: {
                     Authorization: "Bearer " + access_token,
                 },
               });
         } catch (error) {
-          console.error('Error deleting task:', error);
+          console.error('Error deleting user:', error);
         }
       };
 
-    const handleClickOpen = (taskId: string|undefined) => {
-        setSelectedTaskId(taskId);
+    const handleClickOpen = (userID: string|undefined) => {
+        setSelectedUserId(userID);
         setOpen(true);
       };
     
       const handleClose = () => {
-        setSelectedTaskId("");
+        setSelectedUserId("");
         setOpen(false);
       };
 
-    const getTask = async () => {
+    const getUser = async () => {
         try {
           if(!access_token){
             return
           }
-          const response = await axios.get(`http://laravel.test/api/tasks/${id}`, {
+          const response = await axios.get(`http://laravel.test/api/users/${id}`, {
             headers: {
               Authorization: "Bearer " + access_token,
             },
           });
           return response.data;
         } catch (error) {
-          console.error('Error fetching tasks:', error);
+          console.error('Error fetching users:', error);
           throw error;
         }
     };
     
     useEffect(() => {
-      const fetchTask = async () => {
+      const fetchUser = async () => {
         try {
-          const taskData = await getTask();
-          setUpdatedTask({...taskData})
+          const userData = await getUser();
+          setUpdatedUser({...userData})
         } catch (error) {
           console.log(error);
         }
       };
-      fetchTask();
+      fetchUser();
     }, [id]);
-    console.log(updatedTask.name)
-    console.log(updatedTask)
 
-    if (!updatedTask.name) {
+    if (!updatedUser.name) {
       return (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", minHeight: "50vh" }}>
-          <Typography variant="h6">Loading task details...</Typography>
+          <Typography variant="h6">Loading user details...</Typography>
         </Box>
       );
     }
+    
     return (
         <>
         <Box
@@ -119,58 +115,44 @@ const TaskDetail: React.FC = () => {
 
                   <Formik
                     initialValues={{
-                        name: updatedTask.name,
-                        description: updatedTask.description,
-                        status: updatedTask.status,
-                        priority: updatedTask.priority,
-                        start_date: updatedTask.start_date,
-                        end_date: updatedTask.end_date,
+                        id: updatedUser.id,
+                        name: updatedUser.name,
+                        is_admin: updatedUser.is_admin,
                     }}
                     validationSchema={Yup.object({
                         name: Yup.string()
                         .required("This field is required"),
-                        description: Yup.string()
+                        is_admin: Yup.string()
                         .required("This field is required"),
-                        status: Yup.string()
-                        .required("This field is required"),
-                        priority: Yup.string()
-                        .required("This field is required"),
-                        start_date: Yup.date()
-                        .required("This field is required"),
-                        end_date: Yup.date()
-                        .required("This field is required"),
+
                     })}
                     onSubmit={(values) => {
-                      const updateTask = async () => {
+                      const updateUser = async () => {
                         try {
-                          if (!updatedTask) return;
+                          if (!updatedUser) return;
                       
                           const updatePayload = {
                             name: values.name,
-                            description: values.description,
-                            status: values.status,
-                            priority: values.priority,
-                            start_date: values.start_date,
-                            end_date: values.end_date,
+                            is_admin: values.is_admin,
                           };
-                          
-                          await axios.put(`http://laravel.test/api/tasks/${id}`, updatePayload, {
+
+                          await axios.put(`http://laravel.test/api/users/${values.id}`, updatePayload, {
                               headers: {
                                 Authorization: `Bearer ${access_token}`,
                               },
                             }
                           );
-                          window.location.reload();
+                          navigate("/index/users", { state: { user: currentUser } })
                         } catch (error) {
-                          console.error("Error updating task:", error);
+                          console.error("Error updating user:", error);
                         }
                       };
-                        updateTask();
+                        updateUser();
                     }}
                     >
                     {({setFieldValue, values, errors, handleBlur, touched}) => (
                         <StyledForm>
-                            <Typography variant="h3"><strong>Update task</strong></Typography>
+                            <Typography variant="h3"><strong>Update user</strong></Typography>
                             <TextField
                                 label="Name"
                                 name="name"
@@ -181,68 +163,21 @@ const TaskDetail: React.FC = () => {
                                 onBlur={handleBlur}
                                 error={Boolean(errors.name && touched.name)}
                             />
-                            <TextField
-                                label="Description"
-                                name="description"
-                                value={values.description}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setFieldValue("description", e.target.value)           
-                                }}
-                                onBlur={handleBlur}
-                                error={Boolean(errors.description && touched.description)}
-                            />
+                            {errors.name && touched.name && (<Typography variant="body1" color="error" sx={{ alignSelf: "flex-start" }}>{errors.name}</Typography>)}
                             <FormControl fullWidth>
-                                <InputLabel>Status</InputLabel>
+                                <InputLabel>is_admin</InputLabel>
                                 <Select
-                                label="Status"                    
-                                name="status"
-                                value={values.status}
+                                label="is_admin"                    
+                                name="is_admin"
+                                value={values.is_admin}
                                 onChange={(event: SelectChangeEvent<string>) => {
-                                    setFieldValue("status", event.target.value)
+                                    setFieldValue("is_admin", event.target.value)
                                 }}
                                 >
-                                <MenuItem value="Completed">Completed</MenuItem>
-                                <MenuItem value="Ongoing">Ongoing</MenuItem>
-                                <MenuItem value="Cancelled">Cancelled</MenuItem>
+                                <MenuItem value="1">Yes</MenuItem>
+                                <MenuItem value="0">No</MenuItem>
                                 </Select>
                             </FormControl>
-                            <FormControl fullWidth>
-                                <InputLabel>Priority</InputLabel>
-                                <Select
-                                label="Priority"                    
-                                name="priority"
-                                value={values.priority}
-                                onChange={(event: SelectChangeEvent<string>) => {
-                                    setFieldValue("priority", event.target.value)
-                                }}
-                                >
-                                <MenuItem value="High">High</MenuItem>
-                                <MenuItem value="Medium">Medium</MenuItem>
-                                <MenuItem value="Low">Low</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <TextField
-                                label="Start Date"
-                                name="start_date"
-                                type="date"
-                                value={values.start_date}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setFieldValue("start_date", e.target.value)           
-                                }}
-                                onBlur={handleBlur}
-                                error={Boolean(errors.start_date && touched.start_date)}
-                            />
-                            <TextField
-                                label="End Date"
-                                name="end_date"
-                                type="date"
-                                value={values.end_date}
-                                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                                    setFieldValue("end_date", e.target.value)           
-                                }}
-                                onBlur={handleBlur}
-                                error={Boolean(errors.end_date && touched.end_date)}
-                            />
                             <Box sx={{ 
                                 display: "flex", 
                                 gap: "10px", 
@@ -251,10 +186,9 @@ const TaskDetail: React.FC = () => {
                                 <Button variant="contained" color="primary" type="submit">
                                 Save
                                 </Button>
-                                <Button variant="outlined" onClick={() => navigate("/index")}>
+                                <Button variant="outlined" onClick={() => navigate("/index/users", { state: { user: currentUser } })}>
                                 Cancel
                                 </Button>
-                                {user?.is_admin && (
                                   <>
                                   <Button 
                                   variant="contained" 
@@ -271,7 +205,7 @@ const TaskDetail: React.FC = () => {
                                       open={open}
                                       onClose={handleClose}
                                       aria-labelledby="delete-dialog"
-                                      aria-describedby="delete-dialog-description"
+                                      aria-describedby="delete-dialog-email"
                                       >
                                       <DialogTitle id="delete-dialog-title">
                                           {"Are you sure?"}
@@ -288,9 +222,9 @@ const TaskDetail: React.FC = () => {
                                           width: '50%',
                                           margin: '0'
                                           }} onClick={() => {
-                                          const taskid: string = selectedTaskId ?? "";
-                                          deleteTask(taskid);
-                                          navigate("/index");
+                                          const userid: string = selectedUserId ?? "";
+                                          deleteUser(userid);
+                                          navigate("/index/users", { state: { user: currentUser } })
                                           }}
                                           >
                                           Yes
@@ -298,7 +232,6 @@ const TaskDetail: React.FC = () => {
                                       </DialogActions>
                                     </Dialog>
                                   </>
-                                  )}
                             </Box>
                         </StyledForm>)}
                     </Formik>
@@ -309,4 +242,4 @@ const TaskDetail: React.FC = () => {
     );
 };
 
-export default TaskDetail;
+export default UserDetail;

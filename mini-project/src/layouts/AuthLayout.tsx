@@ -49,7 +49,7 @@ const AuthLayout: React.FC = () => {
                 overflow: "auto"
             }}>
                 <SearchAppBar user={user}/>
-                <DynamicBreadcrumbs/>
+                <DynamicBreadcrumbs user={user}/>
                     <Outlet />
             </Box>
 

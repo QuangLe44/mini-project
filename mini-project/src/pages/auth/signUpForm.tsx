@@ -4,6 +4,7 @@ import { Formik, Form, useField, FieldAttributes } from "formik";
 import * as Yup from "yup";
 import { useAuth } from "../../context/AuthContext";
 import { StyledBody, StyledBox } from "../../layouts/Layout";
+import { useNavigate } from "react-router-dom";
 
 const StyledForm = styled(Form)({
     display: "flex",
@@ -43,28 +44,9 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
 
 // And now we can use these
 const SignupForm: React.FC = () => {
+    const navigate = useNavigate();
     const { register } = useAuth();
-    const [name, setName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [passwordConfirm, setPasswordConfirm] = useState('');
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
-    const handleRegister = async (values: { name: string, email: string, password: string, passwordConfirm: string }, { resetForm }: any) => {
-        try {
-            await register(name, email, password, passwordConfirm);
-            setErrorMessage(null);  
-            resetForm();
-        } catch (error) {
-            resetForm();
-            if (error instanceof Error) {
-                setErrorMessage("The email has already been taken.");
-              } else {
-                setErrorMessage("An unexpected error occurred.");
-              }
-              console.error("Sign up failed:", error);
-        }
-    };
 
     return (
         <>
@@ -96,7 +78,23 @@ const SignupForm: React.FC = () => {
                             .oneOf([Yup.ref("password"), undefined], "Passwords must match")
                             .required("Required")
                     })}
-                    onSubmit={handleRegister}
+                    onSubmit={(values) => {
+                        const handleRegister = async () => {
+                            try {
+                                await register(values.name, values.email, values.password, values.passwordConfirm);
+                                setErrorMessage(null);  
+                                navigate("/");
+                            } catch (error) {
+                                if (error instanceof Error) {
+                                    setErrorMessage("The email has already been taken.");
+                                  } else {
+                                    setErrorMessage("An unexpected error occurred.");
+                                  }
+                                  console.error("Sign up failed:", error);
+                            }
+                        };
+                        handleRegister();
+                    }}
                 >
                     {({ setFieldValue }) => (
                         <StyledForm>
@@ -106,7 +104,6 @@ const SignupForm: React.FC = () => {
                                 type="text"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setFieldValue("name", e.target.value);
-                                    setName(e.target.value);
                                 }}
                                 placeholder=""
                             />
@@ -116,7 +113,6 @@ const SignupForm: React.FC = () => {
                                 type="email"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setFieldValue("email", e.target.value);
-                                    setEmail(e.target.value);
                                 }}
                                 placeholder=""
                             />
@@ -126,7 +122,6 @@ const SignupForm: React.FC = () => {
                                 type="password"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setFieldValue("password", e.target.value);
-                                    setPassword(e.target.value);
                                 }}
                                 placeholder=""
                             />
@@ -136,7 +131,6 @@ const SignupForm: React.FC = () => {
                                 type="password"
                                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                                     setFieldValue("passwordConfirm", e.target.value);
-                                    setPasswordConfirm(e.target.value);
                                 }}
                                 placeholder=""
                             />

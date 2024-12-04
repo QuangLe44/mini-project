@@ -10,6 +10,9 @@ import AuthRoute from './components/AuthRoute';
 import TaskDetail from './pages/tasks/TaskDetail';
 import UserList from './pages/user/UserList';
 import UnauthorizedPage from './pages/auth/Unauthorized';
+import NewTask from './pages/tasks/NewTask';
+import UserDetail from './pages/user/UserDetail';
+import CreateUser from './pages/user/CreateUser';
 
 const AppRoutes = () => {
   const routes = useRoutes([
@@ -23,6 +26,9 @@ const AppRoutes = () => {
           { path: 'index/users', element: <UserList /> },
           { path: 'index/:id', element: <TaskDetail /> },
           { path: 'index/unauthorized', element: <UnauthorizedPage/> },
+          { path: 'index/new', element: <NewTask/> },
+          { path: 'index/users/:id', element: <UserDetail/> },
+          { path: 'index/users/new', element: <CreateUser/> },
       ],
     },
   ]);

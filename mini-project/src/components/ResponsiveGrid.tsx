@@ -37,7 +37,6 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
     const [tasks, setTasks] = useState<any[]>([]);
     const [open, setOpen] = useState(false);
     const [selectedTaskId, setSelectedTaskId] = useState<string>("");
-    const [status, setStatus] = useState<{ [key: string]: string }>({});
     const navigate = useNavigate();
 
     const handleClickOpen = (taskId: string) => {
@@ -81,11 +80,6 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
     };
 
     const handleStatusChange = async (taskId: string, newStatus: string) => {
-      setStatus((prevStatuses) => ({
-        ...prevStatuses,
-        [taskId]: newStatus,
-      }));
-
       const updatedTask = tasks.find((task) => task.id === taskId);
 
       if (updatedTask) {
@@ -108,20 +102,6 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
         }
       }
     };
-  
-    interface Task {
-      id: string;
-      name: string;
-      description: string;
-      priority: string;
-      status: string;
-      start_date: string;
-      end_date: string;
-    }
-    
-    interface ID {
-      [key: string]: string; 
-    }
 
     useEffect(() => {
         const fetchTasks = async () => {
@@ -133,18 +113,11 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
             if (taskData.data && taskData.per_page) {
               setRowsPerPage(taskData.per_page);
             }
-
-            const initialStatuses = taskData.data.reduce((acc: ID, task: Task) => {
-              acc[task.id] = task.status;
-              return acc;
-            }, {});
-            setStatus(initialStatuses);
           } catch (error) {
             console.log(error)
           }
         };
         fetchTasks();
-        console.log("getTasks")
       }, [filters, setRowsPerPage, setTotal]);
 
   return (
@@ -152,7 +125,6 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
         margin: "0 1.8rem"
       }}>
         {tasks.map((task: any) => {
-          const taskStatus = status[task.id];
           return (
           <Grid key={task.id} size={3}>
             <Item sx={{
@@ -175,7 +147,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
                 <Typography><strong>Description: </strong>{task.description}</Typography>
                 <Typography><strong>Status: </strong>
                 <select 
-                value={taskStatus} 
+                value={task.status} 
                 onChange={(e) => handleStatusChange(task.id, e.target.value)}>
                     <option value="Completed">Completed</option>
                     <option value="Ongoing">Ongoing</option>
