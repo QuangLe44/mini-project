@@ -134,7 +134,7 @@ const SignupForm: React.FC = () => {
                                 }}
                                 placeholder=""
                             />
-                            {errorMessage && (
+                            {errorMessage ? (
                             <Typography color="error" sx={{
                                 fontWeight: 'bold',
                                 fontSize: "1.2rem",
@@ -143,7 +143,7 @@ const SignupForm: React.FC = () => {
                             }}>
                                 {errorMessage}
                             </Typography>
-                            )}
+                            ) : null}
                             <Button variant="contained" type="submit">Sign up</Button>
                         </StyledForm>
                     )}

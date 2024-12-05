@@ -172,7 +172,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
                 >
                   Details
                 </Button>
-                {user?.is_admin && (
+                {user?.is_admin ? (
                 <>
                   <Button 
                   variant="contained" 
@@ -186,7 +186,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
                     Delete
                   </Button>
                 </>
-                )}
+                ) : null}
               </Box>
             </Item>
           </Grid>

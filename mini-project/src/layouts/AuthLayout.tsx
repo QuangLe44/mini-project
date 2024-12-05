@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import React, { useEffect, useState} from 'react';
 import { Outlet } from 'react-router-dom';
-import SearchAppBar from '../components/SearchAppBar';
+import SearchAppBar from '../components/AppBar';
 import { useAuth } from '../context/AuthContext';
 import axios from 'axios';
 import DynamicBreadcrumbs from '../components/BreadCrumbs';

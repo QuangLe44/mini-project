@@ -132,14 +132,14 @@ export default function SearchAppBar({user}: SearchAppBarProps) {
       }}>
         Task list
       </MenuItem>
-      {user?.is_admin && (
+      {user?.is_admin ? (
         <MenuItem onClick={() => {
           navigate("/index/new", { state: { user } });
           setTaskAnchor(null);
         }}>
           New task
         </MenuItem>
-      )}
+      ) : null}
     </Menu>
   );
 
@@ -150,60 +150,67 @@ export default function SearchAppBar({user}: SearchAppBarProps) {
      }}>
       <AppBar position="static">
         <Toolbar>
-          <Box sx={{ flexGrow: 1 }} />
           <Typography
             variant="h2"
             noWrap
             component="div"
-            sx={{ display: { xs: 'none', sm: 'block' } }}
+            sx={{ 
+              display: { xs: 'none', sm: 'block' }, 
+              textAlign: 'center',
+              width: '100%',
+            }}
           >
             Task
           </Typography>
-          <Box sx={{ flexGrow: 1 }} />
-          {user?.is_admin && (
-          <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
-          <Button sx={{
-            margin: "0"
-          }}
-            variant="outlined"
-            size="large"
-            aria-label="user tab"
-            aria-controls={userId}
-            aria-haspopup="true"
-            onClick={handleUserTabOpen}
-            color="inherit"
-          >
-            User
-          </Button>
-          </Box>
-          )}
-          <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
+          <Box sx={{
+              position: 'absolute',
+              right: 0,
+              display: 'flex', 
+              alignItems: 'center', 
+            }}>
+            {user?.is_admin ? (
+            <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
             <Button sx={{
               margin: "0"
             }}
               variant="outlined"
               size="large"
-              aria-label="tasks tab"
-              aria-controls={taskId}
+              aria-label="user tab"
+              aria-controls={userId}
               aria-haspopup="true"
-              onClick={handleTaskTabOpen}
+              onClick={handleUserTabOpen}
               color="inherit"
             >
-              Tasks
+              User
             </Button>
-          </Box>
-          <Box sx={{ display: 'flex' }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <AccountCircle fontSize='large'/>
-            </IconButton>
+            </Box>
+            ) : null}
+            <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
+              <Button sx={{
+                margin: "0"
+              }}
+                variant="outlined"
+                size="large"
+                aria-controls={taskId}
+                onClick={handleTaskTabOpen}
+                color="inherit"
+              >
+                Tasks
+              </Button>
+            </Box>
+            <Box sx={{ display: 'flex', paddingRight: '2rem' }}>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <AccountCircle fontSize='large'/>
+              </IconButton>
+            </Box>
           </Box>
         </Toolbar>
       </AppBar>

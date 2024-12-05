@@ -188,7 +188,7 @@ const CreateUser: React.FC = () => {
                         }}
                         placeholder=""
                     />
-                    {errorMessage && (
+                    {errorMessage ? (
                         <Typography
                         color="error"
                         sx={{
@@ -200,10 +200,19 @@ const CreateUser: React.FC = () => {
                         >
                         {errorMessage}
                         </Typography>
-                    )}
-                    <Button variant="contained" type="submit">
-                        Save
-                    </Button>
+                    ) : null}
+                    <Box sx={{ 
+                        display: "flex", 
+                        gap: "10px", 
+                        width: '100%' 
+                        }}>
+                        <Button variant="contained" type="submit">
+                            Save
+                        </Button>
+                        <Button variant="outlined" onClick={() => navigate("/index/users")}>
+                            Cancel
+                        </Button>
+                    </Box>
                     </StyledForm>
                 )}
                 </Formik>

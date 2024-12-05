@@ -110,7 +110,7 @@ const LoginForm: React.FC = () => {
               }}
               placeholder=""
             />
-            {errorMessage && (
+            {errorMessage ? (
               <Typography color="error" sx={{
                 fontWeight: "bold",
                 fontSize: "1.2rem",
@@ -119,7 +119,7 @@ const LoginForm: React.FC = () => {
               }}>
                 {errorMessage}
               </Typography>
-            )}
+            ) : null}
             <Button variant="contained" type="submit">Login</Button>
           </StyledForm>)}
         </Formik>

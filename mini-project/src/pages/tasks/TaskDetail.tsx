@@ -3,7 +3,7 @@ import { Box, Paper, Typography, Button, Dialog, DialogTitle, DialogActions, Tex
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Formik, Form, useField, FieldAttributes } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const StyledForm = styled(Form)({
@@ -252,7 +252,7 @@ const TaskDetail: React.FC = () => {
                                 <Button variant="outlined" onClick={() => navigate("/index")}>
                                 Cancel
                                 </Button>
-                                {user?.is_admin && (
+                                {user?.is_admin ? (
                                   <>
                                   <Button 
                                   variant="contained" 
@@ -296,7 +296,7 @@ const TaskDetail: React.FC = () => {
                                       </DialogActions>
                                     </Dialog>
                                   </>
-                                  )}
+                                  ) : null}
                             </Box>
                         </StyledForm>)}
                     </Formik>

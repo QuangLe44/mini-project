@@ -1,20 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Table, TableBody, TableHead, TableRow, Box, Button, TablePagination, Typography, Dialog, DialogTitle, DialogActions } from '@mui/material';
+import { Table, TableBody, TableHead, TableRow, Box, Button, TablePagination, Dialog, DialogTitle, DialogActions } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
 import { StyledCell, StyledHead, Search, SearchIconWrapper, StyledInputBase } from '../../layouts/Layout';
 import SearchIcon from '@mui/icons-material/Search';
 import { useLocation, useNavigate } from 'react-router-dom';
 
-interface User {
-    id: number;
-    name: string;
-    email: string;
-    is_admin: boolean;
-  }
-
 const UserList: React.FC = () => {
-  // const [users, setUsers] = useState<User[]>([]);
   const [users, setUsers] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState({search:'', page: 1, per_page: 5});
