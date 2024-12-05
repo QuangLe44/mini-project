@@ -216,6 +216,8 @@ const UserList: React.FC = () => {
           component="div"
           count={total}
           page={page}
+          showFirstButton
+          showLastButton
           onPageChange={handleChangePage}
           rowsPerPage={rowsPerPage}
           onRowsPerPageChange={handleChangeRowsPerPage}

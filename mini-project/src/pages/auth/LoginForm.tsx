@@ -42,7 +42,6 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
     );
   };
 
-// And now we can use these
 const LoginForm: React.FC = () => {
   const navigate = useNavigate();
   const { login } = useAuth();
@@ -95,8 +94,7 @@ const LoginForm: React.FC = () => {
               name="email"
               type="email"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFieldValue("email", e.target.value)              
-                // setEmail(e.target.value)
+                setFieldValue("email", e.target.value)         
               }}
               placeholder=""
             />
@@ -106,7 +104,6 @@ const LoginForm: React.FC = () => {
               type="password"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setFieldValue("password", e.target.value)              
-                // setPassword(e.target.value)
               }}
               placeholder=""
             />

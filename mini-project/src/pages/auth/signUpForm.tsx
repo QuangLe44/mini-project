@@ -42,7 +42,6 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
     );
 };
 
-// And now we can use these
 const SignupForm: React.FC = () => {
     const navigate = useNavigate();
     const { register } = useAuth();

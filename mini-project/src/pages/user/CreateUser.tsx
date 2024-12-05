@@ -42,7 +42,6 @@ const MyTextInput: React.FC<MyTextInputProps> = ({ label, ...props }) => {
     );
 };
 
-// And now we can use these
 const CreateUser: React.FC = () => {
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState<string | null>(null);

@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.tsx
 import React, { createContext, useContext, useState } from 'react';
 import axios from 'axios';
 import { Navigate } from 'react-router-dom';
@@ -10,7 +9,6 @@ interface User {
   is_admin: boolean;
 }
 
-// Define the shape of the AuthContext
 interface AuthContextType {
   access_token: string | null;
   user: User | null;
@@ -23,7 +21,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-// AuthProvider component
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [access_token, setToken] = useState<string | null>(localStorage.getItem('access_token'));
   const [user, setUser] = useState<User | null>(null);

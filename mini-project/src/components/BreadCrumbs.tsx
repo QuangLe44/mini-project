@@ -1,5 +1,4 @@
-import * as React from 'react';
-import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom'; // Import from react-router-dom
+import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
@@ -21,7 +20,7 @@ const capitalize = (str: string) => {
   }  
 
 export default function DynamicBreadcrumbs({user}: BreadCrumbsProps) {
-  const location = useLocation(); // Get the current location
+  const location = useLocation();
   const pathnames = location.pathname.split('/').filter((x) => x);
 
   const breadcrumbs = pathnames.map((value, index) => {
