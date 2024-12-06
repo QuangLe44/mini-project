@@ -1,28 +1,94 @@
-import React, { useState } from 'react';
-import './App.css';
-import InputField from './components/InputField';
-import { Todo } from './model';
-import TodoList from './components/TodoList';
+import React from 'react';
+import LoginForm from './pages/auth/LoginForm';
+import SignupForm from './pages/auth/signUpForm';
+import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { AuthProvider } from './context/AuthContext';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import TaskIndex from './pages/tasks/TaskIndex';
+import AuthRoute from './components/AuthRoute';
+import TaskDetail from './pages/tasks/TaskDetail';
+import UserIndex from './pages/user/UserIndex';
+import UnauthorizedPage from './pages/auth/Unauthorized';
+import CreateTask from './pages/tasks/CreateTask';
+import UserDetail from './pages/user/UserDetail';
+import CreateUser from './pages/user/CreateUser';
 
-const App: React.FC = () =>  {
-  const [todo, setTodo] = useState<string>("");
-  const [todos, setTodos] = useState<Todo[]>([]);
+const AppRoutes = () => {
+  const routes = useRoutes([
+    { path: '/', element: <LoginForm /> },
+    { path: '/register', element: <SignupForm /> },
+    {
+      path: '/',
+      element: <AuthRoute />,
+      children: [
+          { path: 'index', element: <TaskIndex /> },
+          { path: 'index/users', element: <UserIndex /> },
+          { path: 'index/:id', element: <TaskDetail /> },
+          { path: 'index/unauthorized', element: <UnauthorizedPage/> },
+          { path: 'index/new', element: <CreateTask/> },
+          { path: 'index/users/:id', element: <UserDetail/> },
+          { path: 'index/users/new', element: <CreateUser/> },
+      ],
+    },
+  ]);
+  return routes;
+};
 
-  const handleAdd = (e: React.FormEvent) => {
-    e.preventDefault();
+const theme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          width: "400px",
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides:{
+        root:{
+          marginTop: "2rem",
+          marginBottom: "2rem",
+          width: "100%"
+        },
+      },
+    },  
+    MuiSelect:{      
+      styleOverrides:{
+        root:{
+          minWidth: "9rem",
+          color: "black",
+          backgroundColor: "white",
+          padding: "0.3rem",
+          "& .MuiOutlinedInput-notchedOutline": {
+            borderWidth: "2px",
+            borderColor: "black",
+          },
+          "&:hover .MuiOutlinedInput-notchedOutline": {
+            borderWidth: "2px",
+            borderColor: "#1976d2",
+          },
+          "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+            borderWidth: "2px",
+            borderColor: "#1976d2",
+          },
+        },
+    },
 
-    if (todo) {
-      setTodos([...todos, {id: Date.now(), todo:todo}]);
-      setTodo("");
     }
-  };
+  }
+});
 
+const App: React.FC = () => {
   return (
-      <div className="App">
-        <span className="heading">To-do-list</span>
-        <InputField todo={todo} setTodo={setTodo} handleAdd = {handleAdd}></InputField>
-        <TodoList todos={todos} setTodos={setTodos}></TodoList>
-      </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline/>
+      <AuthProvider>
+          <BrowserRouter>
+            <AppRoutes/>
+          </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
