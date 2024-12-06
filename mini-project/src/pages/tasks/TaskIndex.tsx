@@ -50,7 +50,7 @@ const TaskIndex: React.FC = () => {
     }));
   }, [debouncedName, sort_by, order, page, rowsPerPage]);
 
-  const getTasks = async (filters = {}) => {
+  const getTasks = useCallback(async (filters = {}) => {
     try {
       if(!access_token){
         return
@@ -66,9 +66,9 @@ const TaskIndex: React.FC = () => {
       console.error('Error fetching tasks:', error);
       throw error;
     }
-  }; 
+  },[access_token]); 
 
-  const getUserInfo = async () => {
+  const getUserInfo = useCallback(async () => {
     try {
       const response = await axios.post<User>('http://laravel.test/api/me', {}, {
         headers: {
@@ -81,7 +81,7 @@ const TaskIndex: React.FC = () => {
     } catch (error) {
       console.error('Error fetching user info:', error);
     }
-  };
+  },[access_token]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -98,7 +98,7 @@ const TaskIndex: React.FC = () => {
       }
     };
     fetchTotal();
-  }, []);
+  }, [filters, getTasks]);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -106,7 +106,7 @@ const TaskIndex: React.FC = () => {
     };
 
     fetchUserInfo();
-  }, []);
+  }, [getUserInfo]);
 
   useEffect(() => {
     const handler = setTimeout(() => {

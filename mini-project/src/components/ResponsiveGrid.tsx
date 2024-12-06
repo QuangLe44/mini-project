@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Grid from '@mui/material/Grid2';
 import { Typography, Paper, Button, Box, Dialog, DialogTitle, DialogActions} from "@mui/material";
@@ -49,7 +49,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
       setOpen(false);
     };
 
-    const getTasks = async (filters = {}) => {
+    const getTasks = useCallback(async (filters = {}) => {
       try {
         if(!access_token){
           return
@@ -65,7 +65,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
         console.error('Error fetching tasks:', error);
         throw error;
       }
-    }; 
+    },[access_token]); 
 
     const deleteTask = async (taskId: string): Promise<void> => {
       try {
@@ -118,7 +118,7 @@ export default function ResponsiveGrid({ filters, user, rowsPerPage, setRowsPerP
           }
         };
         fetchTasks();
-      }, [filters, setRowsPerPage, setTotal]);
+      }, [filters, setRowsPerPage, setTotal, getTasks]);
 
   return (
       <Grid container spacing={4} sx={{

@@ -1,9 +1,9 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import { Box, Paper, Typography, Button, Dialog, DialogTitle, DialogActions, TextField, FormControl, MenuItem, Select, InputLabel, SelectChangeEvent, styled} from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
 import { useParams, useLocation, useNavigate } from "react-router-dom";
-import { Formik, Form, useField, FieldAttributes } from "formik";
+import { Formik, Form } from "formik";
 import * as Yup from "yup";
 
 const StyledForm = styled(Form)({
@@ -50,7 +50,7 @@ const UserDetail: React.FC = () => {
         setOpen(false);
       };
 
-    const getUser = async () => {
+    const getUser = useCallback(async () => {
         try {
           if(!access_token){
             return
@@ -65,7 +65,7 @@ const UserDetail: React.FC = () => {
           console.error('Error fetching users:', error);
           throw error;
         }
-    };
+    },[access_token, id]);
     
     useEffect(() => {
       const fetchUser = async () => {
@@ -77,7 +77,7 @@ const UserDetail: React.FC = () => {
         }
       };
       fetchUser();
-    }, [id]);
+    }, [id, getUser]);
 
     if (!updatedUser.name) {
       return (

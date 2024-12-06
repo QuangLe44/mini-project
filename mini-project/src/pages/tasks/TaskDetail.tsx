@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect, useCallback} from "react";
 import { Box, Paper, Typography, Button, Dialog, DialogTitle, DialogActions, TextField, FormControl, MenuItem, Select, InputLabel, SelectChangeEvent, styled} from "@mui/material";
 import axios from "axios";
 import { useAuth } from "../../context/AuthContext";
@@ -53,7 +53,7 @@ const TaskDetail: React.FC = () => {
         setOpen(false);
       };
 
-    const getTask = async () => {
+    const getTask = useCallback(async () => {
         try {
           if(!access_token){
             return
@@ -68,7 +68,7 @@ const TaskDetail: React.FC = () => {
           console.error('Error fetching tasks:', error);
           throw error;
         }
-    };
+    },[access_token, id]);
     
     useEffect(() => {
       const fetchTask = async () => {
@@ -80,7 +80,7 @@ const TaskDetail: React.FC = () => {
         }
       };
       fetchTask();
-    }, [id]);
+    }, [id, getTask]);
 
     if (!updatedTask.name) {
       return (

@@ -61,16 +61,16 @@ const theme = createTheme({
           backgroundColor: "white",
           padding: "0.3rem",
           "& .MuiOutlinedInput-notchedOutline": {
-            borderWidth: "2px", // Set the border thickness here
-            borderColor: "black", // Optional: change border color
+            borderWidth: "2px",
+            borderColor: "black",
           },
           "&:hover .MuiOutlinedInput-notchedOutline": {
             borderWidth: "2px",
-            borderColor: "#1976d2", // Optional: change border color on hover
+            borderColor: "#1976d2",
           },
           "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
             borderWidth: "2px",
-            borderColor: "#1976d2", // Optional: change border color when focused
+            borderColor: "#1976d2",
           },
         },
     },

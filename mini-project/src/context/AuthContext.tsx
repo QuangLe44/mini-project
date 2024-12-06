@@ -97,11 +97,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       console.error('Error fetching user info:', error);
     }
   };
-  const logout = () => {
-    localStorage.removeItem('access_token');   
-    setToken(null);
-    authenticated = !!access_token;
-    return <Navigate to="/" replace />
+  const logout = async () => {
+    try {
+      await axios.post('http://laravel.test/api/logout', {}, {
+        headers: {
+          Authorization: 'Bearer ' + access_token,
+        },
+      });
+      localStorage.removeItem('access_token');   
+      setToken(null);
+      authenticated = !!access_token;
+      return <Navigate to="/" replace />
+    } catch (error) {
+      console.error('Error logging out user:', error);
+    }
   };
 
   const value = {

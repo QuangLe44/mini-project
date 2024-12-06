@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React, { useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState} from 'react';
 import { Outlet } from 'react-router-dom';
 import SearchAppBar from '../components/AppBar';
 import { useAuth } from '../context/AuthContext';
@@ -17,7 +17,7 @@ const AuthLayout: React.FC = () => {
     const [user, setUser] = useState<User | null>(null);
     const { access_token } = useAuth();
 
-    const getUserInfo = async () => {
+    const getUserInfo = useCallback(async () => {
         try {
           const response = await axios.post<User>('http://laravel.test/api/me', {}, {
             headers: {
@@ -30,7 +30,7 @@ const AuthLayout: React.FC = () => {
         } catch (error) {
           console.error('Error fetching user info:', error);
         }
-      };
+      },[access_token]);
 
     useEffect(() => {
       const fetchUserInfo = async () => {
@@ -38,7 +38,7 @@ const AuthLayout: React.FC = () => {
       };
   
       fetchUserInfo();
-    }, []);
+    }, [getUserInfo]);
 
         return (
             <Box sx={{

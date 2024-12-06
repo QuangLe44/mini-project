@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import axios from 'axios';
 import { Table, TableBody, TableHead, TableRow, Box, Button, TablePagination, Dialog, DialogTitle, DialogActions } from '@mui/material';
 import { useAuth } from '../../context/AuthContext';
@@ -60,7 +60,7 @@ const UserList: React.FC = () => {
     }
   };
 
-  const getUsers = async () => {
+  const getUsers = useCallback(async () => {
     try {
       const response = await axios.get('http://laravel.test/api/users', {
           params: debouncedSearch,
@@ -80,7 +80,7 @@ const UserList: React.FC = () => {
     } catch (error) {
       console.error('Error fetching users:', error);
     }
-  };
+  }, [access_token, debouncedSearch])
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -88,7 +88,7 @@ const UserList: React.FC = () => {
     };
 
     fetchUsers();
-  }, [debouncedSearch]);
+  }, [debouncedSearch, getUsers]);
 
   useEffect(() => {
     const handler = setTimeout(() => {
